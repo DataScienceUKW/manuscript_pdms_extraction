@@ -2,7 +2,10 @@
 title: "Extraction and Processing of Intensive Care Chart Data from a Patient Data Management System (PDMS)"
 author:
     - name: Nikolas B. Schrader
+      orcid: 0009-0001-4616-3804
+    - name: Burkhard Meißner
     - name: Paul Fischer
+    - name: Daniel Röder
     - name: Benedikt Schmid
       orcid: 0000-0003-3413-0690
       corresponding: true
@@ -12,10 +15,10 @@ bibliography: references.bib
 ## Abstract
 
 ## Introduction
-The secondary use of routine clinical data is an increasingly valuable resource for clinical research, quality improvement, and the development of decision-support systems. Intensive care medicine (ICM) and perioperative settings, in particular, generate high-frequency, multimodal data captured within Patient Data Management Systems (PDMS). While these systems ensure accurate, detailed and flexible clinical documentation, they are not designed to provide direct access for research purposes. Consequently, Extract, Transform and Load (ETL) processes for secondary data use face significant methodological and technical challenges. In Germany, the secondary use of hospital routine data is governed by strict legal frameworks, including the European General Data Protection Regulation (Datenschutz-Grundverordnung, DSGVO) and the Bavarian Hospital Research Code (Krankenhausforschungsgesetz, KHG), which explicitly establish the legal basis for pseudonymized secondary use of hospital routine data for scientific purposes.
-This paper presents a structured ETL methodology for data from our institutional PDMS (Copra v6, COPRA System GmbH, Berlin, Germany). We discuss the inherent data pipeline hurdles and propose replicable solutions to make high-quality, analysis-ready data accessible to the wider research community.
+The secondary use of routine clinical data is an increasingly valuable resource for clinical research, quality improvement, and the development of decision-support systems. Intensive care medicine (ICM) and perioperative settings, in particular, generate high-frequency, multimodal data captured within Patient Data Management Systems (PDMS). While these systems ensure accurate, detailed and flexible clinical documentation, they are not designed to provide direct access for research purposes. Consequently, Extract, Transform and Load (ETL) processes for secondary data use face significant methodological and technical challenges.
 
-## Methods (including any code description)
+In Germany, the secondary use of hospital routine data is governed by strict legal frameworks, including the European General Data Protection Regulation (Datenschutz-Grundverordnung, DSGVO) and the Bavarian Hospital Research Code (Krankenhausforschungsgesetz, KHG), which explicitly establish the legal basis for pseudonymized secondary use of hospital routine data for scientific purposes.
+
 ### System Description
 The Patient Data Management System (PDMS) Copra is a modular platform that has been widely implemented in intensive care and perioperative settings. Its primary function is the continuous, real-time documentation of clinical information, supporting direct patient care and ensuring medico-legal traceability. The system acquires high-frequency physiological signals (e.g., heart rate, blood pressure, ventilatory parameters), discrete clinical events (e.g., medication administrations, laboratory results, procedures), as well as structured and unstructured data such as clinical scores and narrative notes.
 
@@ -23,37 +26,200 @@ These data points are stored within a complex relational database that is optimi
 
 Crucially, the database remains technically accessible, allowing custom extractions via direct queries and tailored transformation pipelines. This accessibility provides a foundation for research-oriented workflows, even though substantial preprocessing and harmonization are required to access the data suitable for secondary use.
 
+This paper presents a structured ETL methodology for data from our institutional PDMS (Copra v6, COPRA System GmbH, Berlin, Germany). We discuss the inherent data pipeline hurdles and propose replicable solutions to make high-quality, analysis-ready data accessible to the wider research community.
+
+## Methods (including any code description)
+
 ### Data Extraction
 *Technical Access*
-To minimize the risk of affecting clinical system performance, data access was established via a secured ODBC connection to a redundant, read-only copy of the operational database. Initial extractions utilized direct Structured Query Language (SQL), which, while highly effective for targeted retrieval of domains (e.g., ventilator parameters, laboratory results), required intensive schema knowledge and was not a sustainable or reproducible workflow for repeated use.
+
+To minimize the risk of affecting clinical system performance, data access was established via a secured ODBC connection to a redundant, read-only copy of the operational database. 
+
+Initial extractions utilized direct Structured Query Language (SQL). While highly effective for targeted retrieval of domains (e.g., demographics, ventilator parameters, laboratory results), this approach required extensive schema knowledge and was not a sustainable or reproducible workflow for repeated use.
+Furthermore, direct SQL data extraction lacked a robust mechanism for role-based access control beyound user-specific database credentials, and logging user-specific extraction requests was necessary to comply with national regulations.
+
+Although de-identification of sensitive parameters via hashing in SQL was technically feasible, and query-based parameter minimization is obvious, practical implementation and configuration for each individual use case proved highly complex.
+
+#### Straight forward query design for demographic data retrieval
+```sql
+-- Params
+DECLARE @fallnr NVARCHAR(MAX) = :fallnr; -- e.g. '123'
+
+SELECT
+    fall.FALLNR                                     AS case_number,
+    patient.ID                                      AS patient_id,
+    patient.GESCHLECHT                              AS patient_sex,
+    TRY_CONVERT(date, patient.GEB)                  AS patient_dob,
+    CASE 
+        WHEN patient.GEB IS NULL THEN NULL
+        ELSE CAST(DATEPART(year, patient.GEB) AS char(4))
+    END                                             AS patient_dob_yyyy,
+    CASE 
+        WHEN fall.AUFN < patient.GEB THEN NULL
+        ELSE DATEDIFF(YEAR, patient.GEB, fall.AUFN)
+             - CASE 
+                 WHEN DATEADD(YEAR, DATEDIFF(YEAR, patient.GEB, fall.AUFN), patient.GEB) > fall.AUFN 
+                 THEN 1 ELSE 0 
+               END
+    END                                             AS patient_age_at_admission,
+
+FROM CO6_Medic_Data_Fall AS fall
+JOIN CO6_Medic_Data_Patient AS patient
+  ON fall.Patient_ID = patient.ID
+  AND patient.deleted = 0
+WHERE fall.FALLNR = @fallnr
+  AND fall.deleted = 0
+ORDER BY fall.FALLNR;
+```
+
+#### Complex query design for relational data structures and content-aware filtering, e.g., in POCT diagnostic applications (BGA)
+```sql
+-- Params
+DECLARE @fallnr       nvarchar(50)  = CONVERT(nvarchar(50), :fallnr);          -- e.g. '123'
+DECLARE @from_ts      datetime2(0)  = TRY_CONVERT(datetime2(0), :start_date);  -- optional
+DECLARE @to_ts        datetime2(0)  = TRY_CONVERT(datetime2(0), :end_date);    -- optional (exclusive)
+
+IF OBJECT_ID('tempdb..#base_bga') IS NOT NULL DROP TABLE #base_bga;
+
+-- Base for all non-SWISSLAB systems (e.g., ABL/POCT)
+SELECT
+    f.FALLNR,
+    lab.val,
+    lab.Unit,
+    lab.DateTimeTo,
+    labvar.ID           AS LabvarID,
+    labvar.COPRAName,
+    labvar.LaborSystem,
+    CASE
+      WHEN labvar.LaborSystem LIKE 'ABL%' OR labvar.LaborSystem LIKE 'POCT%' THEN 'POCT'
+      ELSE labvar.LaborSystem
+    END AS SystemGroup
+INTO #base_bga
+FROM CO6_Medic_Data_Labor AS lab
+JOIN CO6_Medic_Config_LaborVariables AS labvar
+  ON lab.LaborVariable = labvar.ID
+JOIN (
+  SELECT Patient_ID, FALLNR
+  FROM CO6_Medic_Data_Fall
+  WHERE FALLNR = @fallnr
+) AS f
+  ON lab.Parent_ID = f.Patient_ID
+WHERE lab.deleted = 0
+  AND lab.FlagCurrent = 1
+  AND labvar.LaborSystem <> 'SWISSLAB'
+  AND (@from_ts IS NULL OR lab.DateTimeTo >= @from_ts)
+  AND (@to_ts   IS NULL OR lab.DateTimeTo <  @to_ts);
+```
+
 As research demands expanded, a dedicated Python-based extraction framework was developed, using SQLAlchemy as an abstraction layer. This framework enabled reusable workflows across data domains (vital signs, therapies, medications), automated preprocessing steps such as time stamp conversion (UTC to CET/CEST), and implemented clinically necessary logic to address inconsistencies in documentation.
-For example, documentation of device usage or therapy intervals often lacked explicit termination markers (end times). Identifying truly ongoing interventions versus documentation gaps was critical. To address this, an interval-based logic was introduced that heuristically cross-referenced therapy records with patient bed occupancy data to infer the likely end time. This modular pipeline facilitated reproducibility, improved transparency, and reduced errors compared with ad hoc SQL queries.
-*Usability and Security*
-To make the extraction framework accessible beyond technically trained users, a lightweight front-end interface was implemented. The front-end interface incorporated fine-grained user-based access control and audit logging, fulfilling institutional governance requirements as well as the traceability and accountability obligations defined under DSGVO (Art. 5, 32) and §27 KHG. Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval.
-Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction. By abstracting low-level query complexity from end-user access, we reduced the risk of unintended database interference and promoted data integrity.
-In combination, the flexible back-end workflows and secure front-end interface created a scalable, reproducible, and governance-compliant process for secondary use of PDMS data.
+
+For example, documentation of device usage or therapy intervals often lacked explicit termination markers (end times). Furthermore, reverification of ongoing therapies always produced additional entries for the same treatment, resulting in multiple records for a single continuous intervention. Identifying truly ongoing interventions versus documentation gaps was therefore critical. To address this, an interval-based logic was introduced that heuristically cross-referenced therapy records with patient bed occupancy data to infer missing end times and to rejoin fragmented therapy intervals into continuous episodes.
+
+This modular pipeline facilitated reproducibility, improved transparency, and reduced errors compared with ad hoc SQL queries. To comply with legal requirements, the framework included an auditing mechanism for  user-specific request logging and an integrated hashing for sensitive parameters.
+
+### Data Transformation and Harmonization
+Extracted PDMS data required systematic data cleaning and restructuring. A modular transformation framework was implemented in Python, wherein each clinical domain (vital signs, medications, laboratory values, devices, demographics) was processed by a dedicated service module. Pydantic models defined the output, enforcing type safety, plausibility checks, and schema consistency.
+
+*Temporal Processing*
+
+All data streams were normalized to Central European Time (CET/CEST). For event-based records such as laboratory results or medication administrations, only the time stamps were converted. No additional aggregation or alignment was applied at this stage.
+
+*Vital Signs*
+
+Most numeric values (e.g. blood pressure, heart rate, ventilator parameters) were consistently stored with predefined units in the PDMS. Consequently minimal harmonization was required beyond plausibility filtering and time standardization.
+
+*Medications*
+
+Medication data required the most extensive processing. Documentation occurred in various formats (volume, dose, or rate), and drug concentrations were often not explicitly available. Concentrations were therefore reconstructed from ingredient definitions using internal reference catalogs and classification algorithms. This step was essential to derive standardized application rates (e.g., mg/h, U/h) across projects.
+
+*Devices and Therapies*
+
+Support devices such as ECMO, dialysis, Impella, or intra-aortic balloon pump (IABP) were documented as intervals, but end times were frequently missing. To resolve this, therapy records were cross-referenced with patient bed occupancy and related device tables, allowing inference of active versus terminated therapies.
+
+*Internal Catalogs and Variable Definitions*
+
+Since international terminologies (e.g., LOINC, ATC) were unavailable in the source system, harmonization relied on internally maintained catalogs. These provided stable, project-wide definitions for drugs, laboratory parameters, and device attributes, serving as the central reference for variable identifiers to ensure consistency across service modules.
+
+*Output and Validation*
+
+Each service produced a validated, patient-centered output model. Primary validation via pydantic enforced schema conformity, rejected clinically implausible values, and ensured consistency. Final outputs were stored in structured, analysis-ready formats (CSV or Parquet) with standardized variable naming. Secondary validation involved a sample-based auditing process, comparing extracted data against values displayed in the clinical PDMS front end to confirm consistency.
+
+### Usability and Security
+To make the extraction framework accessible beyond technically trained users, a lightweight front-end interface was implemented. The front-end interface incorporated fine-grained user-based access control and audit logging, fulfilling institutional governance requirements as well as the traceability and accountability obligations defined under DSGVO (Art. 5, 32) and §27 KHG.
+
+Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval. Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction.
+
+By abstracting low-level query complexity from end-user access, we reduced the risk of unintended database interference and promoted data integrity. In combination, the flexible back-end workflows and secure front-end interface created a scalable, reproducible, and governance-compliant process for secondary use of PDMS data.
 
 ## Results (including examples of use and limitations)
-### Data Transformation and Harmonization**
+We implemented a scalable and modular pipeline for automated data extraction from the institutional patient data management system (PDMS, Copra). Although each data category still required its own extraction and transformation logic, the framework provided standardized, reproducible, and legally compliant access to routine clinical data. The system currently supports multiple data domains—including demographics, vital signs, and laboratory results—through predefined, configurable templates. Integrated auditing and de-identification components provide full traceability and pseudonymization in compliance with the General Data Protection Regulation (DSGVO) and §27 KHG.
 
-Extracted PDMS data required systematic data cleaning and restructuring. A modular transformation framework was implemented in Python, wherein each clinical domain (vital signs, medications, laboratory values, devices, demographics) was processed by a dedicated service module. Pydantic models defined the output, enforcing type safety, plausibility checks, and schema consistency.
-*Temporal Processing*
-All data streams were normalized to Central European Time (CET/CEST). For event-based records such as laboratory results or medication administrations, only the time stamps were converted. No additional aggregation or alignment was applied at this stage.
-*Vital Signs*
-Most numeric values (e.g. blood pressure, heart rate, ventilator parameters) were consistently stored with predefined units in the PDMS. Consequently minimal harmonization was required beyond plausibility filtering and time standardization.
-*Medications*
-Medication data required the most extensive processing. Documentation occurred in various formats (volume, dose, or rate), and drug concentrations were often not explicitly available. Concentrations were therefore reconstructed from ingredient definitions using internal reference catalogs and classification algorithms. This step was essential to derive standardized application rates (e.g., mg/h, U/h) across projects.
-*Devices and Therapies*
-Support devices such as ECMO, dialysis, Impella, or intra-aortic balloon pump (IABP) were documented as intervals, but end times were frequently missing. To resolve this, therapy records were cross-referenced with patient bed occupancy and related device tables, allowing inference of active versus terminated therapies.
-*Internal Catalogs and Variable Definitions*
-Since international terminologies (e.g., LOINC, ATC) were unavailable in the source system, harmonization relied on internally maintained catalogs. These provided stable, project-wide definitions for drugs, laboratory parameters, and device attributes, serving as the central reference for variable identifiers to ensure consistency across service modules.
-*Output and Validation*
-Each service produced a validated, patient-centered output model. Primary validation via pydantic enforced schema conformity, rejected clinically implausible values, and ensured consistency. Final outputs were stored in structured, analysis-ready formats (CSV or Parquet) with standardized variable naming. Secondary validation involved a sample-based auditing process, comparing extracted data against values displayed in the clinical PDMS front end to confirm consistency.
-### Ethical and Legal Considerations**
+In practical use, the pipeline substantially reduced manual query effort and improved reproducibility of analyses. A simple demonstration illustrates extraction of demographic data with automated auditing and pseudonymized export.
+
+#### Example usage of the pipeline for demographic data extraction, audit and de-identification.
+```python
+from pipeline.audit_logger import AuditLogger
+from pipeline.extraction_pipeline import run_demographics
+
+audit = AuditLogger(
+    path="logs/audit.jsonl",
+    include_id_samples=True,   # Show sample IDs in internal audit logs
+    id_hash_salt=None           # Or set a salt to hash IDs in audit logs
+)
+
+df = run_demographics(
+    by="cases",
+    ids=["123", "234"],
+    fields=[
+        "case_number",
+        "patient_sex",
+        "patient_age_today",
+    ],
+    hash_salt="custom_demographics_salt",  # Salt for hashing IDs in output
+    out="out/demographics.csv",             # Output CSV path or None to disable export
+    audit=audit,                           # AuditLogger instance or None to disable auditing
+    actor="n.schrader",                    # Identifier for the actor triggering extraction
+)
+
+audit.close()
+```
+
+The corresponding audit log and output file document all parameters, derived fields, and pseudonymized identifiers, demonstrating transparent, auditable access to high-quality PDMS data suitable for secondary use in research and quality improvement projects.
+
+**logs/audit.jsonl**
+```json
+{
+  "ts": "2025-11-12T10:39:57.193437+01:00", 
+  "actor": "n.schrader", 
+  "action": "fetch", 
+  "resource": "demographics", 
+  "by": "cases", 
+  "ids": {"count": 2, "ids": ["123", "234"]}, 
+  "fields_requested": ["case_number", "patient_sex", "patient_age_today"],
+  "fetch_fields": ["case_number", "patient_sex", "patient_date_of_birth"], 
+  "include_fields": ["case_number", "patient_sex", "patient_age_today"], 
+  "derived_added": ["patient_date_of_birth"], 
+  "hashed": true, 
+  "out": "out/demographics.csv", 
+  "out_format": null, 
+  "rows": 2, 
+  "duration_ms": 334.2735409969464
+}
+```
+
+**out/demographics.csv**
+```csv
+case_number,patient_sex,patient_age_today
+a6e808094eb7,W,67
+29a9c06d57ff,M,39
+```
+
+## Discussion (including scalability and limitations)
+### Ethical and Legal Considerations
 All data handling complied with the European General Data Protection Regulation (GDPR, Datenschutz-Grundverordnung, DSGVO) and the Bavarian Krankenhausforschungsgesetz (KHG). Under §27 KHG, the secondary use of pseudonymized hospital routine data is explicitly permitted for research purposes without individual patient consent, provided appropriate safeguards are implemented. In line with Art. 32 DSGVO, state-of-the-art technical and organizational measures were applied to ensure confidentiality, integrity, and availability of the data. In accordance with these legal frameworks, patient identifiers were pseudonymized at the time of extraction and replaced with secure pseudonyms. Data linkage across domains was only performed within the pseudonymized environment.
 Access to raw datasets was limited to authorized staff bound by professional confidentiality and institutional governance rules. All extraction and transformation steps were performed within a secure computing environment physically located at the university hospital with no transfer of personal data to external servers or cloud infrastructure. Audit logs documented every data access and pipeline execution, ensuring full traceability.
 
-## Discussion (including scalability and limitations)
+### Technical and Methodological Considerations
 The extraction of routine clinical data from PDMS presents fundamental technical and methodological hurdles. While optimized for flexible clinical documentation and transactional performance, these systems inherently lack robust tools for analytical data extraction. The highly fragmented, denormalized, and proprietary data structures necessitate highly complex, advanced queries. Furthermore, the use of custom units, varied time formats, and system-specific coding schemes requires extensive data harmonization. Consequently, without dedicated ETL pipelines, these rich datasets remain inaccessible to the majority of clinical researchers. All these hurdles have been described before. @lamer_development_2023
 
 Despite these challenges, structured ETL processes and a focus on standardization can successfully transform raw PDMS data into high-quality, analysis-ready datasets. Future work in the field should prioritize developing standardized export mechanisms (e.g., FHIR-based APIs), improving interoperability, and fostering collaborative data sharing infrastructures.

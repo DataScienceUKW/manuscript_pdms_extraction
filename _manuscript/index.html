@@ -2,12 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nikolas B. Schrader">
+<meta name="author" content="Burkhard Meißner">
 <meta name="author" content="Paul Fischer">
+<meta name="author" content="Daniel Röder">
 <meta name="author" content="Benedikt Schmid">
 
 <title>Extraction and Processing of Intensive Care Chart Data from a Patient Data Management System (PDMS)</title>
@@ -22,6 +24,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -49,19 +86,22 @@ div.csl-indent {
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8a894fcc3cb5e37eb5bf30def131be2f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 <meta name="citation_title" content="Extraction and Processing of Intensive Care Chart Data from a Patient Data Management System (PDMS)">
 <meta name="citation_author" content="Nikolas B. Schrader">
+<meta name="citation_author" content="Burkhard Meißner">
 <meta name="citation_author" content="Paul Fischer">
+<meta name="citation_author" content="Daniel Röder">
 <meta name="citation_author" content="Benedikt Schmid">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Development and usage of an anesthesia data warehouse: Lessons learnt from a 10-year project;,citation_abstract=Abstract This paper describes the development and implementation of an anesthesia data warehouse in the Lille University Hospital. We share the lessons learned from a ten-year project and provide guidance for the implementation of such a project. Our clinical data warehouse is mainly fed with data collected by the anesthesia information management system and hospital discharge reports. The data warehouse stores historical and accurate data with an accuracy level of the day for administrative data, and of the second for monitoring data. Datamarts complete the architecture and provide secondary computed data and indicators, in order to execute queries faster and easily. Between 2010 and 2021, 636 784 anesthesia records were integrated for 353 152 patients. We reported the main concerns and barriers during the development of this project and we provided 8 tips to handle them. We have implemented our data warehouse into the OMOP common data model as a complementary downstream data model. The next step of the project will be to disseminate the use of the OMOP data model for anesthesia and critical care, and drive the trend towards federated learning to enhance collaborations and multicenter studies.;,citation_author=Antoine Lamer;,citation_author=Mouhamed Djahoum Moussa;,citation_author=Romaric Marcilly;,citation_author=Régis Logier;,citation_author=Benoit Vallet;,citation_author=Benoît Tavernier;,citation_publication_date=2023-04;,citation_cover_date=2023-04;,citation_year=2023;,citation_fulltext_html_url=https://link.springer.com/10.1007/s10877-022-00898-y;,citation_issue=2;,citation_doi=10.1007/s10877-022-00898-y;,citation_issn=1387-1307, 1573-2614;,citation_volume=37;,citation_journal_title=Journal of Clinical Monitoring and Computing;">
@@ -84,8 +124,10 @@ div.csl-indent {
                 <div>
             <div class="quarto-title-meta-heading">Authors</div>
             <div class="quarto-title-meta-contents">
-                        <p>Nikolas B. Schrader </p>
+                        <p>Nikolas B. Schrader <a href="https://orcid.org/0009-0001-4616-3804" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+                        <p>Burkhard Meißner </p>
                         <p>Paul Fischer </p>
+                        <p>Daniel Röder </p>
                         <p>Benedikt Schmid <a href="https://orcid.org/0000-0003-3413-0690" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
                       </div>
           </div>
@@ -109,18 +151,21 @@ div.csl-indent {
    
   <ul>
   <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#methods-including-any-code-description" id="toc-methods-including-any-code-description" class="nav-link" data-scroll-target="#methods-including-any-code-description">Methods (including any code description)</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#system-description" id="toc-system-description" class="nav-link" data-scroll-target="#system-description">System Description</a></li>
-  <li><a href="#data-extraction" id="toc-data-extraction" class="nav-link" data-scroll-target="#data-extraction">Data Extraction</a></li>
   </ul></li>
-  <li><a href="#results-including-examples-of-use-and-limitations" id="toc-results-including-examples-of-use-and-limitations" class="nav-link" data-scroll-target="#results-including-examples-of-use-and-limitations">Results (including examples of use and limitations)</a>
+  <li><a href="#methods-including-any-code-description" id="toc-methods-including-any-code-description" class="nav-link" data-scroll-target="#methods-including-any-code-description">Methods (including any code description)</a>
   <ul class="collapse">
-  <li><a href="#data-transformation-and-harmonization" id="toc-data-transformation-and-harmonization" class="nav-link" data-scroll-target="#data-transformation-and-harmonization">Data Transformation and Harmonization**</a></li>
+  <li><a href="#data-extraction" id="toc-data-extraction" class="nav-link" data-scroll-target="#data-extraction">Data Extraction</a></li>
+  <li><a href="#data-transformation-and-harmonization" id="toc-data-transformation-and-harmonization" class="nav-link" data-scroll-target="#data-transformation-and-harmonization">Data Transformation and Harmonization</a></li>
+  <li><a href="#usability-and-security" id="toc-usability-and-security" class="nav-link" data-scroll-target="#usability-and-security">Usability and Security</a></li>
   </ul></li>
+  <li><a href="#results-including-examples-of-use-and-limitations" id="toc-results-including-examples-of-use-and-limitations" class="nav-link" data-scroll-target="#results-including-examples-of-use-and-limitations">Results (including examples of use and limitations)</a></li>
   <li><a href="#discussion-including-scalability-and-limitations" id="toc-discussion-including-scalability-and-limitations" class="nav-link" data-scroll-target="#discussion-including-scalability-and-limitations">Discussion (including scalability and limitations)</a>
   <ul class="collapse">
+  <li><a href="#ethical-and-legal-considerations" id="toc-ethical-and-legal-considerations" class="nav-link" data-scroll-target="#ethical-and-legal-considerations">Ethical and Legal Considerations</a></li>
+  <li><a href="#technical-and-methodological-considerations" id="toc-technical-and-methodological-considerations" class="nav-link" data-scroll-target="#technical-and-methodological-considerations">Technical and Methodological Considerations</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -140,32 +185,186 @@ div.csl-indent {
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The secondary use of routine clinical data is an increasingly valuable resource for clinical research, quality improvement, and the development of decision-support systems. Intensive care medicine (ICM) and perioperative settings, in particular, generate high-frequency, multimodal data captured within Patient Data Management Systems (PDMS). While these systems ensure accurate, detailed and flexible clinical documentation, they are not designed to provide direct access for research purposes. Consequently, Extract, Transform and Load (ETL) processes for secondary data use face significant methodological and technical challenges. In Germany, the secondary use of hospital routine data is governed by strict legal frameworks, including the European General Data Protection Regulation (Datenschutz-Grundverordnung, DSGVO) and the Bavarian Hospital Research Code (Krankenhausforschungsgesetz, KHG), which explicitly establish the legal basis for pseudonymized secondary use of hospital routine data for scientific purposes. This paper presents a structured ETL methodology for data from our institutional PDMS (Copra v6, COPRA System GmbH, Berlin, Germany). We discuss the inherent data pipeline hurdles and propose replicable solutions to make high-quality, analysis-ready data accessible to the wider research community.</p>
-</section>
-<section id="methods-including-any-code-description" class="level2">
-<h2 class="anchored" data-anchor-id="methods-including-any-code-description">Methods (including any code description)</h2>
+<p>The secondary use of routine clinical data is an increasingly valuable resource for clinical research, quality improvement, and the development of decision-support systems. Intensive care medicine (ICM) and perioperative settings, in particular, generate high-frequency, multimodal data captured within Patient Data Management Systems (PDMS). While these systems ensure accurate, detailed and flexible clinical documentation, they are not designed to provide direct access for research purposes. Consequently, Extract, Transform and Load (ETL) processes for secondary data use face significant methodological and technical challenges.</p>
+<p>In Germany, the secondary use of hospital routine data is governed by strict legal frameworks, including the European General Data Protection Regulation (Datenschutz-Grundverordnung, DSGVO) and the Bavarian Hospital Research Code (Krankenhausforschungsgesetz, KHG), which explicitly establish the legal basis for pseudonymized secondary use of hospital routine data for scientific purposes.</p>
 <section id="system-description" class="level3">
 <h3 class="anchored" data-anchor-id="system-description">System Description</h3>
 <p>The Patient Data Management System (PDMS) Copra is a modular platform that has been widely implemented in intensive care and perioperative settings. Its primary function is the continuous, real-time documentation of clinical information, supporting direct patient care and ensuring medico-legal traceability. The system acquires high-frequency physiological signals (e.g., heart rate, blood pressure, ventilatory parameters), discrete clinical events (e.g., medication administrations, laboratory results, procedures), as well as structured and unstructured data such as clinical scores and narrative notes.</p>
 <p>These data points are stored within a complex relational database that is optimized for transactional integrity and operational performance, ensuring reliability and consistency of bedside documentation. However, this optimization is achieved at the expense of secondary data use. The underlying database schema is highly denormalized and fragmented, often featuring data redundancy and reliance on proprietary system-specific coding instead of standardized terminologies (e.g.&nbsp;LOINC, ATC). This leads to incomplete or inconsistently implemented data capturing logic. While these design choices safeguard clinical performance and medico-legal requirements, they present considerable barriers for analytical queries, research applications, and data interoperability.</p>
 <p>Crucially, the database remains technically accessible, allowing custom extractions via direct queries and tailored transformation pipelines. This accessibility provides a foundation for research-oriented workflows, even though substantial preprocessing and harmonization are required to access the data suitable for secondary use.</p>
+<p>This paper presents a structured ETL methodology for data from our institutional PDMS (Copra v6, COPRA System GmbH, Berlin, Germany). We discuss the inherent data pipeline hurdles and propose replicable solutions to make high-quality, analysis-ready data accessible to the wider research community.</p>
 </section>
+</section>
+<section id="methods-including-any-code-description" class="level2">
+<h2 class="anchored" data-anchor-id="methods-including-any-code-description">Methods (including any code description)</h2>
 <section id="data-extraction" class="level3">
 <h3 class="anchored" data-anchor-id="data-extraction">Data Extraction</h3>
-<p><em>Technical Access</em> To minimize the risk of affecting clinical system performance, data access was established via a secured ODBC connection to a redundant, read-only copy of the operational database. Initial extractions utilized direct Structured Query Language (SQL), which, while highly effective for targeted retrieval of domains (e.g., ventilator parameters, laboratory results), required intensive schema knowledge and was not a sustainable or reproducible workflow for repeated use. As research demands expanded, a dedicated Python-based extraction framework was developed, using SQLAlchemy as an abstraction layer. This framework enabled reusable workflows across data domains (vital signs, therapies, medications), automated preprocessing steps such as time stamp conversion (UTC to CET/CEST), and implemented clinically necessary logic to address inconsistencies in documentation. For example, documentation of device usage or therapy intervals often lacked explicit termination markers (end times). Identifying truly ongoing interventions versus documentation gaps was critical. To address this, an interval-based logic was introduced that heuristically cross-referenced therapy records with patient bed occupancy data to infer the likely end time. This modular pipeline facilitated reproducibility, improved transparency, and reduced errors compared with ad hoc SQL queries. <em>Usability and Security</em> To make the extraction framework accessible beyond technically trained users, a lightweight front-end interface was implemented. The front-end interface incorporated fine-grained user-based access control and audit logging, fulfilling institutional governance requirements as well as the traceability and accountability obligations defined under DSGVO (Art. 5, 32) and §27 KHG. Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval. Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction. By abstracting low-level query complexity from end-user access, we reduced the risk of unintended database interference and promoted data integrity. In combination, the flexible back-end workflows and secure front-end interface created a scalable, reproducible, and governance-compliant process for secondary use of PDMS data.</p>
+<p><em>Technical Access</em></p>
+<p>To minimize the risk of affecting clinical system performance, data access was established via a secured ODBC connection to a redundant, read-only copy of the operational database.</p>
+<p>Initial extractions utilized direct Structured Query Language (SQL). While highly effective for targeted retrieval of domains (e.g., demographics, ventilator parameters, laboratory results), this approach required extensive schema knowledge and was not a sustainable or reproducible workflow for repeated use. Furthermore, direct SQL data extraction lacked a robust mechanism for role-based access control beyound user-specific database credentials, and logging user-specific extraction requests was necessary to comply with national regulations.</p>
+<p>Although de-identification of sensitive parameters via hashing in SQL was technically feasible, and query-based parameter minimization is obvious, practical implementation and configuration for each individual use case proved highly complex.</p>
+<section id="straight-forward-query-design-for-demographic-data-retrieval" class="level4">
+<h4 class="anchored" data-anchor-id="straight-forward-query-design-for-demographic-data-retrieval">Straight forward query design for demographic data retrieval</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @fallnr <span class="dt">NVARCHAR</span>(<span class="fu">MAX</span>) <span class="op">=</span> <span class="ch">:fallnr</span>; <span class="co">-- e.g. '123'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    fall.FALLNR                                     <span class="kw">AS</span> case_number,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    patient.<span class="kw">ID</span>                                      <span class="kw">AS</span> patient_id,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    patient.GESCHLECHT                              <span class="kw">AS</span> patient_sex,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    TRY_CONVERT(<span class="dt">date</span>, patient.GEB)                  <span class="kw">AS</span> patient_dob,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">CASE</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">WHEN</span> patient.GEB <span class="kw">IS</span> <span class="kw">NULL</span> <span class="cf">THEN</span> <span class="kw">NULL</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">ELSE</span> <span class="fu">CAST</span>(DATEPART(<span class="dt">year</span>, patient.GEB) <span class="kw">AS</span> <span class="dt">char</span>(<span class="dv">4</span>))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span>                                             <span class="kw">AS</span> patient_dob_yyyy,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">CASE</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">WHEN</span> fall.AUFN <span class="op">&lt;</span> patient.GEB <span class="cf">THEN</span> <span class="kw">NULL</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">ELSE</span> DATEDIFF(<span class="dt">YEAR</span>, patient.GEB, fall.AUFN)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>             <span class="op">-</span> <span class="cf">CASE</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">WHEN</span> DATEADD(<span class="dt">YEAR</span>, DATEDIFF(<span class="dt">YEAR</span>, patient.GEB, fall.AUFN), patient.GEB) <span class="op">&gt;</span> fall.AUFN </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>               <span class="cf">END</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span>                                             <span class="kw">AS</span> patient_age_at_admission,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> CO6_Medic_Data_Fall <span class="kw">AS</span> fall</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> CO6_Medic_Data_Patient <span class="kw">AS</span> patient</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> fall.Patient_ID <span class="op">=</span> patient.<span class="kw">ID</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> patient.deleted <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> fall.FALLNR <span class="op">=</span> @fallnr</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> fall.deleted <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> fall.FALLNR;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="complex-query-design-for-relational-data-structures-and-content-aware-filtering-e.g.-in-poct-diagnostic-applications-bga" class="level4">
+<h4 class="anchored" data-anchor-id="complex-query-design-for-relational-data-structures-and-content-aware-filtering-e.g.-in-poct-diagnostic-applications-bga">Complex query design for relational data structures and content-aware filtering, e.g., in POCT diagnostic applications (BGA)</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @fallnr       <span class="dt">nvarchar</span>(<span class="dv">50</span>)  <span class="op">=</span> <span class="fu">CONVERT</span>(<span class="dt">nvarchar</span>(<span class="dv">50</span>), <span class="ch">:fallnr</span>);          <span class="co">-- e.g. '123'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @from_ts      datetime2(<span class="dv">0</span>)  <span class="op">=</span> TRY_CONVERT(datetime2(<span class="dv">0</span>), <span class="ch">:start_date</span>);  <span class="co">-- optional</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @to_ts        datetime2(<span class="dv">0</span>)  <span class="op">=</span> TRY_CONVERT(datetime2(<span class="dv">0</span>), <span class="ch">:end_date</span>);    <span class="co">-- optional (exclusive)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">IF</span> OBJECT_ID(<span class="st">'tempdb..#base_bga'</span>) <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">DROP</span> <span class="kw">TABLE</span> #base_bga;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- Base for all non-SWISSLAB systems (e.g., ABL/POCT)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    f.FALLNR,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    lab.val,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    lab.Unit,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    lab.DateTimeTo,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    labvar.<span class="kw">ID</span>           <span class="kw">AS</span> LabvarID,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    labvar.COPRAName,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    labvar.LaborSystem,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">CASE</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="cf">WHEN</span> labvar.LaborSystem <span class="kw">LIKE</span> <span class="st">'ABL%'</span> <span class="kw">OR</span> labvar.LaborSystem <span class="kw">LIKE</span> <span class="st">'POCT%'</span> <span class="cf">THEN</span> <span class="st">'POCT'</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">ELSE</span> labvar.LaborSystem</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">END</span> <span class="kw">AS</span> SystemGroup</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="kw">INTO</span> #base_bga</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> CO6_Medic_Data_Labor <span class="kw">AS</span> lab</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> CO6_Medic_Config_LaborVariables <span class="kw">AS</span> labvar</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> lab.LaborVariable <span class="op">=</span> labvar.<span class="kw">ID</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> (</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> Patient_ID, FALLNR</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> CO6_Medic_Data_Fall</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> FALLNR <span class="op">=</span> @fallnr</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>) <span class="kw">AS</span> f</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> lab.Parent_ID <span class="op">=</span> f.Patient_ID</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> lab.deleted <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> lab.FlagCurrent <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> labvar.LaborSystem <span class="op">&lt;&gt;</span> <span class="st">'SWISSLAB'</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> (@from_ts <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> lab.DateTimeTo <span class="op">&gt;=</span> @from_ts)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> (@to_ts   <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> lab.DateTimeTo <span class="op">&lt;</span>  @to_ts);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>As research demands expanded, a dedicated Python-based extraction framework was developed, using SQLAlchemy as an abstraction layer. This framework enabled reusable workflows across data domains (vital signs, therapies, medications), automated preprocessing steps such as time stamp conversion (UTC to CET/CEST), and implemented clinically necessary logic to address inconsistencies in documentation.</p>
+<p>For example, documentation of device usage or therapy intervals often lacked explicit termination markers (end times). Furthermore, reverification of ongoing therapies always produced additional entries for the same treatment, resulting in multiple records for a single continuous intervention. Identifying truly ongoing interventions versus documentation gaps was therefore critical. To address this, an interval-based logic was introduced that heuristically cross-referenced therapy records with patient bed occupancy data to infer missing end times and to rejoin fragmented therapy intervals into continuous episodes.</p>
+<p>This modular pipeline facilitated reproducibility, improved transparency, and reduced errors compared with ad hoc SQL queries. To comply with legal requirements, the framework included an auditing mechanism for user-specific request logging and an integrated hashing for sensitive parameters.</p>
+</section>
+</section>
+<section id="data-transformation-and-harmonization" class="level3">
+<h3 class="anchored" data-anchor-id="data-transformation-and-harmonization">Data Transformation and Harmonization</h3>
+<p>Extracted PDMS data required systematic data cleaning and restructuring. A modular transformation framework was implemented in Python, wherein each clinical domain (vital signs, medications, laboratory values, devices, demographics) was processed by a dedicated service module. Pydantic models defined the output, enforcing type safety, plausibility checks, and schema consistency.</p>
+<p><em>Temporal Processing</em></p>
+<p>All data streams were normalized to Central European Time (CET/CEST). For event-based records such as laboratory results or medication administrations, only the time stamps were converted. No additional aggregation or alignment was applied at this stage.</p>
+<p><em>Vital Signs</em></p>
+<p>Most numeric values (e.g.&nbsp;blood pressure, heart rate, ventilator parameters) were consistently stored with predefined units in the PDMS. Consequently minimal harmonization was required beyond plausibility filtering and time standardization.</p>
+<p><em>Medications</em></p>
+<p>Medication data required the most extensive processing. Documentation occurred in various formats (volume, dose, or rate), and drug concentrations were often not explicitly available. Concentrations were therefore reconstructed from ingredient definitions using internal reference catalogs and classification algorithms. This step was essential to derive standardized application rates (e.g., mg/h, U/h) across projects.</p>
+<p><em>Devices and Therapies</em></p>
+<p>Support devices such as ECMO, dialysis, Impella, or intra-aortic balloon pump (IABP) were documented as intervals, but end times were frequently missing. To resolve this, therapy records were cross-referenced with patient bed occupancy and related device tables, allowing inference of active versus terminated therapies.</p>
+<p><em>Internal Catalogs and Variable Definitions</em></p>
+<p>Since international terminologies (e.g., LOINC, ATC) were unavailable in the source system, harmonization relied on internally maintained catalogs. These provided stable, project-wide definitions for drugs, laboratory parameters, and device attributes, serving as the central reference for variable identifiers to ensure consistency across service modules.</p>
+<p><em>Output and Validation</em></p>
+<p>Each service produced a validated, patient-centered output model. Primary validation via pydantic enforced schema conformity, rejected clinically implausible values, and ensured consistency. Final outputs were stored in structured, analysis-ready formats (CSV or Parquet) with standardized variable naming. Secondary validation involved a sample-based auditing process, comparing extracted data against values displayed in the clinical PDMS front end to confirm consistency.</p>
+</section>
+<section id="usability-and-security" class="level3">
+<h3 class="anchored" data-anchor-id="usability-and-security">Usability and Security</h3>
+<p>To make the extraction framework accessible beyond technically trained users, a lightweight front-end interface was implemented. The front-end interface incorporated fine-grained user-based access control and audit logging, fulfilling institutional governance requirements as well as the traceability and accountability obligations defined under DSGVO (Art. 5, 32) and §27 KHG.</p>
+<p>Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval. Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction.</p>
+<p>By abstracting low-level query complexity from end-user access, we reduced the risk of unintended database interference and promoted data integrity. In combination, the flexible back-end workflows and secure front-end interface created a scalable, reproducible, and governance-compliant process for secondary use of PDMS data.</p>
 </section>
 </section>
 <section id="results-including-examples-of-use-and-limitations" class="level2">
 <h2 class="anchored" data-anchor-id="results-including-examples-of-use-and-limitations">Results (including examples of use and limitations)</h2>
-<section id="data-transformation-and-harmonization" class="level3">
-<h3 class="anchored" data-anchor-id="data-transformation-and-harmonization">Data Transformation and Harmonization**</h3>
-<p>Extracted PDMS data required systematic data cleaning and restructuring. A modular transformation framework was implemented in Python, wherein each clinical domain (vital signs, medications, laboratory values, devices, demographics) was processed by a dedicated service module. Pydantic models defined the output, enforcing type safety, plausibility checks, and schema consistency. <em>Temporal Processing</em> All data streams were normalized to Central European Time (CET/CEST). For event-based records such as laboratory results or medication administrations, only the time stamps were converted. No additional aggregation or alignment was applied at this stage. <em>Vital Signs</em> Most numeric values (e.g.&nbsp;blood pressure, heart rate, ventilator parameters) were consistently stored with predefined units in the PDMS. Consequently minimal harmonization was required beyond plausibility filtering and time standardization. <em>Medications</em> Medication data required the most extensive processing. Documentation occurred in various formats (volume, dose, or rate), and drug concentrations were often not explicitly available. Concentrations were therefore reconstructed from ingredient definitions using internal reference catalogs and classification algorithms. This step was essential to derive standardized application rates (e.g., mg/h, U/h) across projects. <em>Devices and Therapies</em> Support devices such as ECMO, dialysis, Impella, or intra-aortic balloon pump (IABP) were documented as intervals, but end times were frequently missing. To resolve this, therapy records were cross-referenced with patient bed occupancy and related device tables, allowing inference of active versus terminated therapies. <em>Internal Catalogs and Variable Definitions</em> Since international terminologies (e.g., LOINC, ATC) were unavailable in the source system, harmonization relied on internally maintained catalogs. These provided stable, project-wide definitions for drugs, laboratory parameters, and device attributes, serving as the central reference for variable identifiers to ensure consistency across service modules. <em>Output and Validation</em> Each service produced a validated, patient-centered output model. Primary validation via pydantic enforced schema conformity, rejected clinically implausible values, and ensured consistency. Final outputs were stored in structured, analysis-ready formats (CSV or Parquet) with standardized variable naming. Secondary validation involved a sample-based auditing process, comparing extracted data against values displayed in the clinical PDMS front end to confirm consistency. ### Ethical and Legal Considerations** All data handling complied with the European General Data Protection Regulation (GDPR, Datenschutz-Grundverordnung, DSGVO) and the Bavarian Krankenhausforschungsgesetz (KHG). Under §27 KHG, the secondary use of pseudonymized hospital routine data is explicitly permitted for research purposes without individual patient consent, provided appropriate safeguards are implemented. In line with Art. 32 DSGVO, state-of-the-art technical and organizational measures were applied to ensure confidentiality, integrity, and availability of the data. In accordance with these legal frameworks, patient identifiers were pseudonymized at the time of extraction and replaced with secure pseudonyms. Data linkage across domains was only performed within the pseudonymized environment. Access to raw datasets was limited to authorized staff bound by professional confidentiality and institutional governance rules. All extraction and transformation steps were performed within a secure computing environment physically located at the university hospital with no transfer of personal data to external servers or cloud infrastructure. Audit logs documented every data access and pipeline execution, ensuring full traceability.</p>
+<p>We implemented a scalable and modular pipeline for automated data extraction from the institutional patient data management system (PDMS, Copra). Although each data category still required its own extraction and transformation logic, the framework provided standardized, reproducible, and legally compliant access to routine clinical data. The system currently supports multiple data domains—including demographics, vital signs, and laboratory results—through predefined, configurable templates. Integrated auditing and de-identification components provide full traceability and pseudonymization in compliance with the General Data Protection Regulation (DSGVO) and §27 KHG.</p>
+<p>In practical use, the pipeline substantially reduced manual query effort and improved reproducibility of analyses. A simple demonstration illustrates extraction of demographic data with automated auditing and pseudonymized export.</p>
+<section id="example-usage-of-the-pipeline-for-demographic-data-extraction-audit-and-de-identification." class="level4">
+<h4 class="anchored" data-anchor-id="example-usage-of-the-pipeline-for-demographic-data-extraction-audit-and-de-identification.">Example usage of the pipeline for demographic data extraction, audit and de-identification.</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.audit_logger <span class="im">import</span> AuditLogger</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.extraction_pipeline <span class="im">import</span> run_demographics</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>audit <span class="op">=</span> AuditLogger(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    path<span class="op">=</span><span class="st">"logs/audit.jsonl"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    include_id_samples<span class="op">=</span><span class="va">True</span>,   <span class="co"># Show sample IDs in internal audit logs</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    id_hash_salt<span class="op">=</span><span class="va">None</span>           <span class="co"># Or set a salt to hash IDs in audit logs</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> run_demographics(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    by<span class="op">=</span><span class="st">"cases"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    ids<span class="op">=</span>[<span class="st">"123"</span>, <span class="st">"234"</span>],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    fields<span class="op">=</span>[</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"case_number"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"patient_sex"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"patient_age_today"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    hash_salt<span class="op">=</span><span class="st">"custom_demographics_salt"</span>,  <span class="co"># Salt for hashing IDs in output</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    out<span class="op">=</span><span class="st">"out/demographics.csv"</span>,             <span class="co"># Output CSV path or None to disable export</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    audit<span class="op">=</span>audit,                           <span class="co"># AuditLogger instance or None to disable auditing</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    actor<span class="op">=</span><span class="st">"n.schrader"</span>,                    <span class="co"># Identifier for the actor triggering extraction</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>audit.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The corresponding audit log and output file document all parameters, derived fields, and pseudonymized identifiers, demonstrating transparent, auditable access to high-quality PDMS data suitable for secondary use in research and quality improvement projects.</p>
+<p><strong>logs/audit.jsonl</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"ts"</span><span class="fu">:</span> <span class="st">"2025-11-12T10:39:57.193437+01:00"</span><span class="fu">,</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"actor"</span><span class="fu">:</span> <span class="st">"n.schrader"</span><span class="fu">,</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"action"</span><span class="fu">:</span> <span class="st">"fetch"</span><span class="fu">,</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"resource"</span><span class="fu">:</span> <span class="st">"demographics"</span><span class="fu">,</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"by"</span><span class="fu">:</span> <span class="st">"cases"</span><span class="fu">,</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"ids"</span><span class="fu">:</span> <span class="fu">{</span><span class="dt">"count"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">"ids"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"123"</span><span class="ot">,</span> <span class="st">"234"</span><span class="ot">]</span><span class="fu">},</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"fields_requested"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"case_number"</span><span class="ot">,</span> <span class="st">"patient_sex"</span><span class="ot">,</span> <span class="st">"patient_age_today"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"fetch_fields"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"case_number"</span><span class="ot">,</span> <span class="st">"patient_sex"</span><span class="ot">,</span> <span class="st">"patient_date_of_birth"</span><span class="ot">]</span><span class="fu">,</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"include_fields"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"case_number"</span><span class="ot">,</span> <span class="st">"patient_sex"</span><span class="ot">,</span> <span class="st">"patient_age_today"</span><span class="ot">]</span><span class="fu">,</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"derived_added"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"patient_date_of_birth"</span><span class="ot">]</span><span class="fu">,</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"hashed"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"out"</span><span class="fu">:</span> <span class="st">"out/demographics.csv"</span><span class="fu">,</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"out_format"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"rows"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"duration_ms"</span><span class="fu">:</span> <span class="fl">334.2735409969464</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>out/demographics.csv</strong></p>
+<pre class="csv"><code>case_number,patient_sex,patient_age_today
+a6e808094eb7,W,67
+29a9c06d57ff,M,39</code></pre>
 </section>
 </section>
 <section id="discussion-including-scalability-and-limitations" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-including-scalability-and-limitations">Discussion (including scalability and limitations)</h2>
+<section id="ethical-and-legal-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="ethical-and-legal-considerations">Ethical and Legal Considerations</h3>
+<p>All data handling complied with the European General Data Protection Regulation (GDPR, Datenschutz-Grundverordnung, DSGVO) and the Bavarian Krankenhausforschungsgesetz (KHG). Under §27 KHG, the secondary use of pseudonymized hospital routine data is explicitly permitted for research purposes without individual patient consent, provided appropriate safeguards are implemented. In line with Art. 32 DSGVO, state-of-the-art technical and organizational measures were applied to ensure confidentiality, integrity, and availability of the data. In accordance with these legal frameworks, patient identifiers were pseudonymized at the time of extraction and replaced with secure pseudonyms. Data linkage across domains was only performed within the pseudonymized environment. Access to raw datasets was limited to authorized staff bound by professional confidentiality and institutional governance rules. All extraction and transformation steps were performed within a secure computing environment physically located at the university hospital with no transfer of personal data to external servers or cloud infrastructure. Audit logs documented every data access and pipeline execution, ensuring full traceability.</p>
+</section>
+<section id="technical-and-methodological-considerations" class="level3">
+<h3 class="anchored" data-anchor-id="technical-and-methodological-considerations">Technical and Methodological Considerations</h3>
 <p>The extraction of routine clinical data from PDMS presents fundamental technical and methodological hurdles. While optimized for flexible clinical documentation and transactional performance, these systems inherently lack robust tools for analytical data extraction. The highly fragmented, denormalized, and proprietary data structures necessitate highly complex, advanced queries. Furthermore, the use of custom units, varied time formats, and system-specific coding schemes requires extensive data harmonization. Consequently, without dedicated ETL pipelines, these rich datasets remain inaccessible to the majority of clinical researchers. All these hurdles have been described before. <span class="citation" data-cites="lamer_development_2023">Lamer et al. (<a href="#ref-lamer_development_2023" role="doc-biblioref">2023</a>)</span></p>
 <p>Despite these challenges, structured ETL processes and a focus on standardization can successfully transform raw PDMS data into high-quality, analysis-ready datasets. Future work in the field should prioritize developing standardized export mechanisms (e.g., FHIR-based APIs), improving interoperability, and fostering collaborative data sharing infrastructures. In conclusion, routine data stored in PDMS contain unique opportunities for clinical and translational research, and the development of automation and decision-support systems. However secondary use requires overcoming substantial technical and methodological barriers. The approach presented here offers a reproducible methodology for extracting, transforming, harmonizing, and validating PDMS data, making them accessible to a wider research community while maintaining compliance with ethical and legal requirements.</p>
+</section>
 <section id="references" class="level3">
 <h3 class="anchored" data-anchor-id="references">References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
@@ -229,13 +428,14 @@ Lamer, Antoine, Mouhamed Djahoum Moussa, Romaric Marcilly, Régis Logier, Benoit
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
