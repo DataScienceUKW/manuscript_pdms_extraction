@@ -1,3 +1,77 @@
+@article{maletzky_lifting_2022,
+	title = {Lifting {Hospital} {Electronic} {Health} {Record} {Data} {Treasures}: {Challenges} and {Opportunities}},
+	volume = {10},
+	issn = {2291-9694},
+	shorttitle = {Lifting {Hospital} {Electronic} {Health} {Record} {Data} {Treasures}},
+	doi = {10.2196/38557},
+	abstract = {Electronic health records (EHRs) have been successfully used in data science and machine learning projects. However, most of these data are collected for clinical use rather than for retrospective analysis. This means that researchers typically face many different issues when attempting to access and prepare the data for secondary use. We aimed to investigate how raw EHRs can be accessed and prepared in retrospective data science projects in a disciplined, effective, and efficient way. We report our experience and findings from a large-scale data science project analyzing routinely acquired retrospective data from the Kepler University Hospital in Linz, Austria. The project involved data collection from more than 150,000 patients over a period of 10 years. It included diverse data modalities, such as static demographic data, irregularly acquired laboratory test results, regularly sampled vital signs, and high-frequency physiological waveform signals. Raw medical data can be corrupted in many unexpected ways that demand thorough manual inspection and highly individualized data cleaning solutions. We present a general data preparation workflow, which was shaped in the course of our project and consists of the following 7 steps: obtain a rough overview of the available EHR data, define clinically meaningful labels for supervised learning, extract relevant data from the hospital's data warehouses, match data extracted from different sources, deidentify them, detect errors and inconsistencies therein through a careful exploratory analysis, and implement a suitable data processing pipeline in actual code. Only few of the data preparation issues encountered in our project were addressed by generic medical data preprocessing tools that have been proposed recently. Instead, highly individualized solutions for the specific data used in one's own research seem inevitable. We believe that the proposed workflow can serve as a guidance for practitioners, helping them to identify and address potential problems early and avoid some common pitfalls.},
+	language = {eng},
+	number = {10},
+	journal = {JMIR medical informatics},
+	author = {Maletzky, Alexander and Böck, Carl and Tschoellitsch, Thomas and Roland, Theresa and Ludwig, Helga and Thumfart, Stefan and Giretzlehner, Michael and Hochreiter, Sepp and Meier, Jens},
+	month = oct,
+	year = {2022},
+	pmid = {36269654},
+	pmcid = {PMC9636533},
+	keywords = {electronic health record, machine learning, medical data preparation, retrospective data analysis},
+	pages = {e38557},
+}
+
+@article{van_essen_implications_2025,
+	title = {Implications of {Data} {Extraction} and {Processing} of {Electronic} {Health} {Records} for {Epidemiological} {Research}: {Observational} {Study}},
+	volume = {27},
+	issn = {1438-8871},
+	shorttitle = {Implications of {Data} {Extraction} and {Processing} of {Electronic} {Health} {Records} for {Epidemiological} {Research}},
+	url = {https://www.jmir.org/2025/1/e64628},
+	doi = {10.2196/64628},
+	abstract = {Abstract 
+             
+              Background 
+              The use of routinely recorded electronic health record (EHR) data is increasingly common, especially in epidemiological research. However, data must be processed and prepared for secondary use, and decisions made during this process could significantly impact research outcomes. A demonstration of the extent of these consequences is necessary. 
+             
+             
+              Objective 
+              The aim of this study was to investigate the influence of data processing steps on research outcomes derived from the secondary use of EHR data. 
+             
+             
+              Methods 
+               
+                EHR data from 8 Dutch general practices from 2019 were used. These practices contributed data to 2 research databases: the Academic General Practitioner Development Network registry and the Nivel Primary Care Database. Data were extracted and processed through distinct extraction, transformation, and loading (ETL) pipelines, allowing the evaluation of the impact of different ETL methods by comparing the 2 datasets in three steps: (1) patient demographics, (2) epidemiology of concordant patients, and (3) health service use of patients with 3 diagnoses. A number of similarity indicators, including the number of contacts, regular consultations and visits, prescriptions, and episodes, were compared between the 2 databases. The outcomes were compared by performing paired samples 
+                t 
+                tests using 99\% CIs. Prevalence, number of prescriptions, and number of regular consultations and visits per 1000 patient years were calculated and compared for 3 diagnoses (diabetes mellitus, urinary tract infection, and cough). These outcomes were compared using the SD. 
+               
+             
+             
+              Results 
+              Differences were observed between the datasets in the number of enrolled patients (Academic General Practitioner Development Network registry: n=47,517; Nivel Primary Care Database: n=44,247). Despite this, patient demographics were similar. All indicator outcomes of the concordant patients showed significant differences between the databases, that is, the number of contacts, prescriptions, and episodes per patient, and the number of regular consultations and visits. Differences in the indicator outcomes for the 3 diagnosis groups varied greatly in SD, however, none of the differences were deemed significant. 
+             
+             
+              Conclusions 
+              The findings highlight the importance of routine health data users’ awareness of different ETL steps involved. Transparency and shared knowledge about these processes are critical, and making them available for research is necessary. Data processors should share their knowledge regarding their choices, and researchers and policy makers should invest in their knowledge of this type of metadata. Transparency and shared knowledge are particularly important in light of the European Health Data Space and the ever-increasing secondary use of routinely recorded health data. Future research should focus on the role of transparency, joint decision-making, and the minimization of effects of ETL steps, and on the insight into the individual influence of ETL steps on research outcomes. This could stimulate standardized approaches among data processors and researchers, resulting in increased data interoperability.},
+	language = {en},
+	urldate = {2025-11-12},
+	journal = {Journal of Medical Internet Research},
+	author = {Van Essen, Melissa H J and Twickler, Robin and Weesie, Yvette M and Arslan, Ilgin G and Groenhof, Feikje and Peters, Lilian L and Bos, Isabelle and Verheij, Robert A},
+	month = jun,
+	year = {2025},
+	pages = {e64628--e64628},
+}
+
+@article{daniel_boie_scalable_2024,
+	title = {A scalable approach for critical care data extraction and analysis in an academic medical center},
+	volume = {192},
+	issn = {13865056},
+	url = {https://linkinghub.elsevier.com/retrieve/pii/S1386505624002740},
+	doi = {10.1016/j.ijmedinf.2024.105611},
+	language = {en},
+	urldate = {2025-11-12},
+	journal = {International Journal of Medical Informatics},
+	author = {Daniel Boie, Sebastian and Meyer-Eschenbach, Falk and Schreiber, Fabian and Giesa, Niklas and Barrenetxea, Jon and Guinemer, Camille and Haufe, Stefan and Krämer, Michael and Brunecker, Peter and Prasser, Fabian and Balzer, Felix},
+	month = dec,
+	year = {2024},
+	pages = {105611},
+}
+
 @article{lamer_development_2023,
 	title = {Development and usage of an anesthesia data warehouse: lessons learnt from a 10-year project},
 	volume = {37},
@@ -15,4 +89,203 @@
 	month = apr,
 	year = {2023},
 	pages = {461--472},
+}
+@article{holmes_why_2021,
+	title = {Why {Is} the {Electronic} {Health} {Record} {So} {Challenging} for {Research} and {Clinical} {Care}?},
+	volume = {60},
+	issn = {0026-1270, 2511-705X},
+	url = {http://www.thieme-connect.de/DOI/DOI?10.1055/s-0041-1731784},
+	doi = {10.1055/s-0041-1731784},
+	abstract = {Abstract 
+            Background The electronic health record (EHR) has become increasingly ubiquitous. At the same time, health professionals have been turning to this resource for access to data that is needed for the delivery of health care and for clinical research. There is little doubt that the EHR has made both of these functions easier than earlier days when we relied on paper-based clinical records. Coupled with modern database and data warehouse systems, high-speed networks, and the ability to share clinical data with others are large number of challenges that arguably limit the optimal use of the EHR 
+            Objectives Our goal was to provide an exhaustive reference for those who use the EHR in clinical and research contexts, but also for health information systems professionals as they design, implement, and maintain EHR systems. 
+            Methods This study includes a panel of 24 biomedical informatics researchers, information technology professionals, and clinicians, all of whom have extensive experience in design, implementation, and maintenance of EHR systems, or in using the EHR as clinicians or researchers. All members of the panel are affiliated with Penn Medicine at the University of Pennsylvania and have experience with a variety of different EHR platforms and systems and how they have evolved over time. 
+            Results Each of the authors has shared their knowledge and experience in using the EHR in a suite of 20 short essays, each representing a specific challenge and classified according to a functional hierarchy of interlocking facets such as usability and usefulness, data quality, standards, governance, data integration, clinical care, and clinical research. 
+            Conclusion We provide here a set of perspectives on the challenges posed by the EHR to clinical and research users.},
+	language = {en},
+	number = {01/02},
+	urldate = {2025-11-12},
+	journal = {Methods of Information in Medicine},
+	author = {Holmes, John H. and Beinlich, James and Boland, Mary R. and Bowles, Kathryn H. and Chen, Yong and Cook, Tessa S. and Demiris, George and Draugelis, Michael and Fluharty, Laura and Gabriel, Peter E. and Grundmeier, Robert and Hanson, C. William and Herman, Daniel S. and Himes, Blanca E. and Hubbard, Rebecca A. and Kahn, Charles E. and Kim, Dokyoon and Koppel, Ross and Long, Qi and Mirkovic, Nebojsa and Morris, Jeffrey S. and Mowery, Danielle L. and Ritchie, Marylyn D. and Urbanowicz, Ryan and Moore, Jason H.},
+	month = may,
+	year = {2021},
+	pages = {032--048},
+}
+@article{solomon_integrating_2023,
+	title = {Integrating {Clinical} {Decision} {Support} {Into} {Electronic} {Health} {Record} {Systems} {Using} a {Novel} {Platform} ({EvidencePoint}): {Developmental} {Study}},
+	volume = {7},
+	issn = {2561-326X},
+	shorttitle = {Integrating {Clinical} {Decision} {Support} {Into} {Electronic} {Health} {Record} {Systems} {Using} a {Novel} {Platform} ({EvidencePoint})},
+	url = {https://formative.jmir.org/2023/1/e44065},
+	doi = {10.2196/44065},
+	abstract = {Background 
+              Through our work, we have demonstrated how clinical decision support (CDS) tools integrated into the electronic health record (EHR) assist providers in adopting evidence-based practices. This requires confronting technical challenges that result from relying on the EHR as the foundation for tool development; for example, the individual CDS tools need to be built independently for each different EHR. 
+             
+             
+              Objective 
+              The objective of our research was to build and implement an EHR-agnostic platform for integrating CDS tools, which would remove the technical constraints inherent in relying on the EHR as the foundation and enable a single set of CDS tools that can work with any EHR. 
+             
+             
+              Methods 
+              We developed EvidencePoint, a novel, cloud-based, EHR-agnostic CDS platform, and we will describe the development of EvidencePoint and the deployment of its initial CDS tools, which include EHR-integrated applications for clinical use cases such as prediction of hospitalization survival for patients with COVID-19, venous thromboembolism prophylaxis, and pulmonary embolism diagnosis. 
+             
+             
+              Results 
+              The results below highlight the adoption of the CDS tools, the International Medical Prevention Registry on Venous Thromboembolism-D-Dimer, the Wells’ criteria, and the Northwell COVID-19 Survival (NOCOS), following development, usability testing, and implementation. The International Medical Prevention Registry on Venous Thromboembolism-D-Dimer CDS was used in 5249 patients at the 2 clinical intervention sites. The intervention group tool adoption was 77.8\% (4083/5249 possible uses). For the NOCOS tool, which was designed to assist with triaging patients with COVID-19 for hospital admission in the event of constrained hospital resources, the worst-case resourcing scenario never materialized and triaging was never required. As a result, the NOCOS tool was not frequently used, though the EvidencePoint platform’s flexibility and customizability enabled the tool to be developed and deployed rapidly under the emergency conditions of the pandemic. Adoption rates for the Wells’ criteria tool will be reported in a future publication. 
+             
+             
+              Conclusions 
+              The EvidencePoint system successfully demonstrated that a flexible, user-friendly platform for hosting CDS tools outside of a specific EHR is feasible. The forthcoming results of our outcomes analyses will demonstrate the adoption rate of EvidencePoint tools as well as the impact of behavioral economics “nudges” on the adoption rate. Due to the EHR-agnostic nature of EvidencePoint, the development process for additional forms of CDS will be simpler than traditional and cumbersome IT integration approaches and will benefit from the capabilities provided by the core system of EvidencePoint.},
+	language = {en},
+	urldate = {2025-11-14},
+	journal = {JMIR Formative Research},
+	author = {Solomon, Jeffrey and Dauber-Decker, Katherine and Richardson, Safiya and Levy, Sera and Khan, Sundas and Coleman, Benjamin and Persaud, Rupert and Chelico, John and King, D'Arcy and Spyropoulos, Alex and McGinn, Thomas},
+	month = oct,
+	year = {2023},
+	pages = {e44065},
+}
+@article{moor_predicting_2023,
+	title = {Predicting sepsis using deep learning across international sites: a retrospective development and validation study},
+	volume = {62},
+	issn = {25895370},
+	shorttitle = {Predicting sepsis using deep learning across international sites},
+	url = {https://linkinghub.elsevier.com/retrieve/pii/S2589537023003012},
+	doi = {10.1016/j.eclinm.2023.102124},
+	language = {en},
+	urldate = {2025-11-14},
+	journal = {eClinicalMedicine},
+	author = {Moor, Michael and Bennett, Nicolas and Plečko, Drago and Horn, Max and Rieck, Bastian and Meinshausen, Nicolai and Bühlmann, Peter and Borgwardt, Karsten},
+	month = aug,
+	year = {2023},
+	pages = {102124},
+}
+
+@article{hoque_impact_2017,
+	title = {Impact of clinical registries on quality of patient care and clinical outcomes: {A} systematic review},
+	volume = {12},
+	issn = {1932-6203},
+	shorttitle = {Impact of clinical registries on quality of patient care and clinical outcomes},
+	url = {https://dx.plos.org/10.1371/journal.pone.0183667},
+	doi = {10.1371/journal.pone.0183667},
+	language = {en},
+	number = {9},
+	urldate = {2025-11-14},
+	journal = {PLOS ONE},
+	author = {Hoque, Dewan Md Emdadul and Kumari, Varuni and Hoque, Masuma and Ruseckaite, Rasa and Romero, Lorena and Evans, Sue M.},
+	editor = {Kumar, Saravana},
+	month = sep,
+	year = {2017},
+	pages = {e0183667},
+}
+
+@article{schneeweiss_conducting_2021,
+	title = {Conducting {Real}-world {Evidence} {Studies} on the {Clinical} {Outcomes} of {Diabetes} {Treatments}},
+	volume = {42},
+	copyright = {https://creativecommons.org/licenses/by-nc-nd/4.0/},
+	issn = {0163-769X, 1945-7189},
+	url = {https://academic.oup.com/edrv/article/42/5/658/6169054},
+	doi = {10.1210/endrev/bnab007},
+	abstract = {Abstract 
+            Real-world evidence (RWE), the understanding of treatment effectiveness in clinical practice generated from longitudinal patient-level data from the routine operation of the healthcare system, is thought to complement evidence on the efficacy of medications from randomized controlled trials (RCTs). RWE studies follow a structured approach. (1) A design layer decides on the study design, which is driven by the study question and refined by a medically informed target population, patient-informed outcomes, and biologically informed effect windows. Imagining the randomized trial we would ideally perform before designing an RWE study in its likeness reduces bias; the new-user active comparator cohort design has proven useful in many RWE studies of diabetes treatments. (2) A measurement layer transforms the longitudinal patient-level data stream into variables that identify the study population, the pre-exposure patient characteristics, the treatment, and the treatment-emergent outcomes. Working with secondary data increases the measurement complexity compared to primary data collection that we find in most RCTs. (3) An analysis layer focuses on the causal treatment effect estimation. Propensity score analyses have gained in popularity to minimize confounding in healthcare database analyses. Well-understood investigator errors, like immortal time bias, adjustment for causal intermediates, or reverse causation, should be avoided. To increase reproducibility of RWE findings, studies require full implementation transparency. This article integrates state-of-the-art knowledge on how to conduct and review RWE studies on diabetes treatments to maximize study validity and ultimately increased confidence in RWE-based decision making.},
+	language = {en},
+	number = {5},
+	urldate = {2025-11-14},
+	journal = {Endocrine Reviews},
+	author = {Schneeweiss, Sebastian and Patorno, Elisabetta},
+	month = sep,
+	year = {2021},
+	pages = {658--690},
+}
+@article{klopfenstein_developing_2025,
+	title = {Developing a {Scalable} {Annotation} {Method} for {Large} {Datasets} {That} {Enhances} {Alarms} {With} {Actionability} {Data} to {Increase} {Informativeness}: {Mixed} {Methods} {Approach}},
+	volume = {27},
+	issn = {1438-8871},
+	shorttitle = {Developing a {Scalable} {Annotation} {Method} for {Large} {Datasets} {That} {Enhances} {Alarms} {With} {Actionability} {Data} to {Increase} {Informativeness}},
+	url = {https://www.jmir.org/2025/1/e65961},
+	doi = {10.2196/65961},
+	abstract = {Background 
+              Alarm fatigue, a multifactorial desensitization of staff to alarms, can harm both patients and health care staff in intensive care units (ICUs), especially due to false and nonactionable alarms. Increasing amounts of routinely collected alarm and ICU patient data are paving the way for training machine learning (ML) models that may help reduce the number of nonactionable alarms, potentially increasing alarm informativeness and reducing alarm fatigue. At present, however, there is no publicly available dataset or process that routinely collects information on alarm actionability (ie, whether an alarm triggers a medical intervention or not), which is a key feature for developing meaningful ML models for alarm management. Furthermore, case-based manual annotation is too slow and resource intensive for large amounts of data. 
+             
+             
+              Objective 
+              We propose a scalable method to annotate patient monitoring alarms associated with patient-related variables regarding their actionability. While the method is aimed to be used primarily in our institution, other clinicians, scientists, and industry stakeholders could reuse it to build their own datasets. 
+             
+             
+              Methods 
+              The interdisciplinary research team followed a mixed methods approach to develop the annotation method, using data-driven, qualitative, and empirical strategies. The iterative process consisted of six steps: (1) defining alarm terms; (2) reaching a consensus on an annotation concept and documentation structure; (3) defining physiological alarm conditions, related medical interventions, and time windows to assess; (4) developing mapping tables; (5) creating the annotation rule set; and (6) evaluating the generated content. All decisions were made based on feasibility criteria, clinical relevance, occurrence frequency, data availability and quantity, structure, and storage mode. The annotation guideline development process was preceded by the analysis of the institution’s data and systems, the evaluation of device manuals, and a systematic literature review. 
+             
+             
+              Results 
+              In a multidisciplinary consensus-based approach, we defined preprocessing steps and a rule-based annotation method to classify alarms as either actionable or nonactionable based on data from the patient data management system. We have presented our experience in developing the annotation method and provided the generated resources. The method focuses on respiratory and medication management interventions and includes 8 general rules in a tabular format that are accompanied by graphical examples. Mapping tables enable handling unstructured information and are referenced in the annotation rule set. 
+             
+             
+              Conclusions 
+              Our annotation method will enable a large number of alarms to be labeled semiautomatically, retrospectively, and quickly, and will provide information on their actionability based on further patient data. This will make it possible to generate annotated datasets for ML models in alarm management and alarm fatigue research. We believe that our annotation method and the resources provided are universal enough and could be used by others to prepare data for future ML projects, even beyond the topic of alarms.},
+	language = {en},
+	urldate = {2025-11-14},
+	journal = {Journal of Medical Internet Research},
+	author = {Klopfenstein, Sophie Anne Inès and Flint, Anne Rike and Heeren, Patrick and Prendke, Mona and Chaoui, Amin and Ocker, Thomas and Chromik, Jonas and Arnrich, Bert and Balzer, Felix and Poncette, Akira-Sebastian},
+	month = may,
+	year = {2025},
+	pages = {e65961},
+}
+
+@article{zuber_does_2022,
+	title = {Does adherence to a quality indicator regarding early weaning from invasive ventilation improve economic outcome? {A} single-centre retrospective study},
+	volume = {12},
+	issn = {2044-6055, 2044-6055},
+	shorttitle = {Does adherence to a quality indicator regarding early weaning from invasive ventilation improve economic outcome?},
+	url = {https://bmjopen.bmj.com/lookup/doi/10.1136/bmjopen-2020-045327},
+	doi = {10.1136/bmjopen-2020-045327},
+	abstract = {Objectives 
+              To measure and assess the economic impact of adherence to a single quality indicator (QI) regarding weaning from invasive ventilation. 
+             
+             
+              Design 
+              Retrospective observational single-centre study, based on electronic medical and administrative records. 
+             
+             
+              Setting 
+              Intensive care unit (ICU) of a German university hospital, reference centre for acute respiratory distress syndrome. 
+             
+             
+              Participants 
+              Records of 3063 consecutive mechanically ventilated patients admitted to the ICU between 2012 and 2017 were extracted, of whom 583 were eligible adults for further analysis. Patients’ weaning protocols were evaluated for daily adherence to quality standards until ICU discharge. Patients with {\textless}65\% compliance were assigned to the low adherence group (LAG), patients with ≥65\% to the high adherence group (HAG). 
+             
+             
+              Primary and secondary outcome measures 
+              Economic healthcare costs, clinical outcomes and patients’ characteristics. 
+             
+             
+              Results 
+              The LAG consisted of 378 patients with a median negative economic results of −€3969, HAG of 205 (−€1030), respectively (p{\textless}0.001). Median duration of ventilation was 476 (248; 769) hours in the LAG and 389 (247; 608) hours in the HAG (p{\textless}0.001). Length of stay (LOS) in the LAG on ICU was 21 (12; 35) days and 16 (11; 25) days in the HAG (p{\textless}0.001). LOS in the hospital was 36 (22; 61) days in the LAG, and within the HAG, respectively, 26 (18; 48) days (p=0.001). 
+             
+             
+              Conclusions 
+              High adherence to this single QI is associated with better clinical outcome and improved economic returns. Therefore, the results support the adherence to QI. However, the examined QI does not influence economic outcome as the decisive factor.},
+	language = {en},
+	number = {1},
+	urldate = {2025-11-14},
+	journal = {BMJ Open},
+	author = {Zuber, Alexander and Kumpf, Oliver and Spies, Claudia and Höft, Moritz and Deffland, Marc and Ahlborn, Robert and Kruppa, Jochen and Jochem, Roland and Balzer, Felix},
+	month = jan,
+	year = {2022},
+	pages = {e045327},
+}
+@standard{ISO9075-1:2023,
+  title        = {Information technology — Database languages — SQL — Part 1: Framework (SQL/Framework)},
+  organization= {International Organization for Standardization},
+  author       = {{ISO/IEC}},
+  year         = {2023},
+  edition      = {6},
+  number       = {ISO/IEC 9075-1:2023(E)},
+  note         = {Available from: \url{https://www.iso.org/standard/79067.html}},
+  address      = {Geneva, Switzerland}
+}
+@misc{sqlalchemy_software,
+  author       = {Michael Bayer and contributors},
+  title        = {SQLAlchemy, Python SQL toolkit and Object Relational Mapper},
+  year         = {2023},
+  note         = {Version 2.0+},
+  howpublished = {\url{https://www.sqlalchemy.org/}}
 }

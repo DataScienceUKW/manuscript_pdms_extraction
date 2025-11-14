@@ -3,44 +3,62 @@ title: "Extraction and Processing of Intensive Care Chart Data from a Patient Da
 author:
     - name: Nikolas B. Schrader
       orcid: 0009-0001-4616-3804
+      affiliations:
+        - ref: anest
     - name: Burkhard Meißner
+      affiliations:
+        - ref: SMI
     - name: Paul Fischer
+      affiliations:
+        - ref: anest
     - name: Daniel Röder
+      orcid: 0000-0001-6805-9330
+      affiliations:
+        - ref: anest
+    - name: Maximilian Ertl
+      affiliations:
+        - ref: SMI
     - name: Benedikt Schmid
+      affiliations:
+        - ref: anest
       orcid: 0000-0003-3413-0690
       corresponding: true
+affiliations:
+  - id: anest
+    name: University Hospital Würzburg, Department of Anesthesiology, Intensive Care, Emergency and Pain Medicine
+    city: Würzburg
+    country: Germany
+  - id: SMI
+    name: University Hospital Würzburg, Service Center Medical Informatics
 format: html
 bibliography: references.bib
+csl: vancouver.csl
 ---
 ## Abstract
 
 ## Introduction
-The secondary use of routine clinical data is an increasingly valuable resource for clinical research, quality improvement, and the development of decision-support systems. Intensive care medicine (ICM) and perioperative settings, in particular, generate high-frequency, multimodal data captured within Patient Data Management Systems (PDMS). While these systems ensure accurate, detailed and flexible clinical documentation, they are not designed to provide direct access for research purposes. Consequently, Extract, Transform and Load (ETL) processes for secondary data use face significant methodological and technical challenges.
+The secondary use of routine clinical data from electronic health records (EHR) is an increasingly valuable resource for clinical research[@moor_predicting_2023;@schneeweiss_conducting_2021], quality improvement[@hoque_impact_2017], and the development of decision-support systems [@solomon_integrating_2023]. Intensive care medicine (ICM) and perioperative settings, in particular, generate high-frequency, multimodal data captured within Patient Data Management Systems (PDMS). While these systems ensure accurate, detailed and flexible clinical documentation, they are not designed to provide direct access for research purposes. Consequently, Extract, Transform and Load (ETL) processes for secondary data use face significant methodological and technical challenges. @holmes_why_2021 Different individual approaches to address these challenges have been published before. [@maletzky_lifting_2022; @daniel_boie_scalable_2024]
 
-In Germany, the secondary use of hospital routine data is governed by strict legal frameworks, including the European General Data Protection Regulation (Datenschutz-Grundverordnung, DSGVO) and the Bavarian Hospital Research Code (Krankenhausforschungsgesetz, KHG), which explicitly establish the legal basis for pseudonymized secondary use of hospital routine data for scientific purposes.
+Access to and utilization of EHR data is subject to a plethora of laws and regulations. In Germany, the secondary use of hospital routine data is governed by strict legal frameworks, including the European General Data Protection Regulation (Datenschutz-Grundverordnung, DSGVO) and the Bavarian Hospital Research Code (Krankenhausforschungsgesetz, KHG), which explicitly establish the legal basis for pseudonymized secondary use of hospital routine data for scientific purposes.
 
 ### System Description
-The Patient Data Management System (PDMS) Copra is a modular platform that has been widely implemented in intensive care and perioperative settings. Its primary function is the continuous, real-time documentation of clinical information, supporting direct patient care and ensuring medico-legal traceability. The system acquires high-frequency physiological signals (e.g., heart rate, blood pressure, ventilatory parameters), discrete clinical events (e.g., medication administrations, laboratory results, procedures), as well as structured and unstructured data such as clinical scores and narrative notes.
+The Patient Data Management System (PDMS) Copra (Copra v6, COPRA System GmbH, Berlin, Germany) is a modular platform that has been widely implemented in intensive care and perioperative settings[@zuber_does_2022;@klopfenstein_developing_2025]. Its primary function is the continuous, real-time documentation of clinical information, supporting direct patient care and ensuring medico-legal traceability. The system acquires high-frequency physiological signals (e.g., heart rate, blood pressure, ventilatory parameters), discrete clinical events (e.g., medication administrations, laboratory results, procedures), as well as structured and unstructured data such as clinical scores and narrative notes.
 
 These data points are stored within a complex relational database that is optimized for transactional integrity and operational performance, ensuring reliability and consistency of bedside documentation. However, this optimization is achieved at the expense of secondary data use. The underlying database schema is highly denormalized and fragmented, often featuring data redundancy and reliance on proprietary system-specific coding instead of standardized terminologies (e.g. LOINC, ATC). This leads to incomplete or inconsistently implemented data capturing logic. While these design choices safeguard clinical performance and medico-legal requirements, they present considerable barriers for analytical queries, research applications, and data interoperability.
 
-Crucially, the database remains technically accessible, allowing custom extractions via direct queries and tailored transformation pipelines. This accessibility provides a foundation for research-oriented workflows, even though substantial preprocessing and harmonization are required to access the data suitable for secondary use.
+However, the database remains technically accessible, allowing custom extractions via direct queries and tailored transformation pipelines. This accessibility provides a foundation for research-oriented workflows, even though substantial preprocessing and harmonization are required to access the data suitable for secondary use.
 
-This paper presents a structured ETL methodology for data from our institutional PDMS (Copra v6, COPRA System GmbH, Berlin, Germany). We discuss the inherent data pipeline hurdles and propose replicable solutions to make high-quality, analysis-ready data accessible to the wider research community.
+This paper presents a structured ETL methodology for data from our institutional PDMS. We discuss the inherent data pipeline hurdles and propose replicable solutions to make high-quality, analysis-ready data accessible to the wider research community.
 
-## Methods (including any code description)
+## Methods
 
 ### Data Extraction
 *Technical Access*
 
 To minimize the risk of affecting clinical system performance, data access was established via a secured ODBC connection to a redundant, read-only copy of the operational database. 
+Initial extractions utilized direct Structured Query Language (SQL)[@ISO9075-1:2023]. A basic application is shown in @lst-data_extraction.  
 
-Initial extractions utilized direct Structured Query Language (SQL). While highly effective for targeted retrieval of domains (e.g., demographics, ventilator parameters, laboratory results), this approach required extensive schema knowledge and was not a sustainable or reproducible workflow for repeated use.
-Furthermore, direct SQL data extraction lacked a robust mechanism for role-based access control beyound user-specific database credentials, and logging user-specific extraction requests was necessary to comply with national regulations.
-
-Although de-identification of sensitive parameters via hashing in SQL was technically feasible, and query-based parameter minimization is obvious, practical implementation and configuration for each individual use case proved highly complex.
-
-#### Straight forward query design for demographic data retrieval
+:::{#lst-data_extraction}
 ```sql
 -- Params
 DECLARE @fallnr NVARCHAR(MAX) = :fallnr; -- e.g. '123'
@@ -71,8 +89,13 @@ WHERE fall.FALLNR = @fallnr
   AND fall.deleted = 0
 ORDER BY fall.FALLNR;
 ```
+Straight-forward query design for demographic data retrieval
+:::
 
-#### Complex query design for relational data structures and content-aware filtering, e.g., in POCT diagnostic applications (BGA)
+Other, more relational data structures required a more complex extraction algorithm to ensure accurate outputs. Here, we describe the extraction of point-of-care blood gas analysis results (@lst-extraxtion_BGA).
+
+:::{#lst-extraxtion_BGA}
+
 ```sql
 -- Params
 DECLARE @fallnr       nvarchar(50)  = CONVERT(nvarchar(50), :fallnr);          -- e.g. '123'
@@ -110,8 +133,10 @@ WHERE lab.deleted = 0
   AND (@from_ts IS NULL OR lab.DateTimeTo >= @from_ts)
   AND (@to_ts   IS NULL OR lab.DateTimeTo <  @to_ts);
 ```
+Complex query design for relational data structures and content-aware filtering, e.g. in point-of-care diagnostic applications.
+:::
 
-As research demands expanded, a dedicated Python-based extraction framework was developed, using SQLAlchemy as an abstraction layer. This framework enabled reusable workflows across data domains (vital signs, therapies, medications), automated preprocessing steps such as time stamp conversion (UTC to CET/CEST), and implemented clinically necessary logic to address inconsistencies in documentation.
+As research demands expanded, a dedicated Python-based extraction framework was developed, using SQLAlchemy as an abstraction layer [@sqlalchemy_software]. This framework enabled reusable workflows across data domains (vital signs, therapies, medications), automated preprocessing steps such as time stamp conversion (UTC to CET/CEST), and implemented clinically necessary logic to address inconsistencies in documentation.
 
 For example, documentation of device usage or therapy intervals often lacked explicit termination markers (end times). Furthermore, reverification of ongoing therapies always produced additional entries for the same treatment, resulting in multiple records for a single continuous intervention. Identifying truly ongoing interventions versus documentation gaps was therefore critical. To address this, an interval-based logic was introduced that heuristically cross-referenced therapy records with patient bed occupancy data to infer missing end times and to rejoin fragmented therapy intervals into continuous episodes.
 
@@ -147,7 +172,7 @@ Each service produced a validated, patient-centered output model. Primary valida
 ### Usability and Security
 To make the extraction framework accessible beyond technically trained users, a lightweight front-end interface was implemented. The front-end interface incorporated fine-grained user-based access control and audit logging, fulfilling institutional governance requirements as well as the traceability and accountability obligations defined under DSGVO (Art. 5, 32) and §27 KHG.
 
-Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval. Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction.
+Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval. Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction. De-identification of sensitive parameters was achieved by hashing.
 
 By abstracting low-level query complexity from end-user access, we reduced the risk of unintended database interference and promoted data integrity. In combination, the flexible back-end workflows and secure front-end interface created a scalable, reproducible, and governance-compliant process for secondary use of PDMS data.
 
@@ -220,7 +245,9 @@ All data handling complied with the European General Data Protection Regulation 
 Access to raw datasets was limited to authorized staff bound by professional confidentiality and institutional governance rules. All extraction and transformation steps were performed within a secure computing environment physically located at the university hospital with no transfer of personal data to external servers or cloud infrastructure. Audit logs documented every data access and pipeline execution, ensuring full traceability.
 
 ### Technical and Methodological Considerations
-The extraction of routine clinical data from PDMS presents fundamental technical and methodological hurdles. While optimized for flexible clinical documentation and transactional performance, these systems inherently lack robust tools for analytical data extraction. The highly fragmented, denormalized, and proprietary data structures necessitate highly complex, advanced queries. Furthermore, the use of custom units, varied time formats, and system-specific coding schemes requires extensive data harmonization. Consequently, without dedicated ETL pipelines, these rich datasets remain inaccessible to the majority of clinical researchers. All these hurdles have been described before. @lamer_development_2023
+The extraction of routine clinical data from PDMS presents fundamental technical and methodological hurdles. While optimized for flexible clinical documentation and transactional performance, these systems inherently lack robust tools for analytical data extraction. The highly fragmented, denormalized, and proprietary data structures necessitate highly complex, advanced queries. As a result, extensive schema knowledge will be neccessary during the initial steps of data extraction. This SQL-based approach is highly effective for targeted retrieval of domains (e.g., demographics, ventilator parameters, laboratory results). However, direct SQL data extraction lacked a robust mechanism for role-based access control beyound user-specific database credentials, and logging user-specific extraction requests was necessary to comply with national regulations.
+
+Although de-identification of sensitive parameters via hashing in SQL was technically feasible, and query-based parameter minimization is obvious, practical implementation and configuration for each individual use case proved highly complex. Furthermore, the use of custom units, varied time formats, and system-specific coding schemes requires extensive data harmonization. Consequently, without dedicated ETL pipelines, these rich datasets remain inaccessible to the majority of clinical researchers. All these hurdles have been described before. @lamer_development_2023
 
 Despite these challenges, structured ETL processes and a focus on standardization can successfully transform raw PDMS data into high-quality, analysis-ready datasets. Future work in the field should prioritize developing standardized export mechanisms (e.g., FHIR-based APIs), improving interoperability, and fostering collaborative data sharing infrastructures.
 In conclusion, routine data stored in PDMS contain unique opportunities for clinical and translational research, and the development of automation and decision-support systems. However secondary use requires overcoming substantial technical and methodological barriers. The approach presented here offers a reproducible methodology for extracting, transforming, harmonizing, and validating PDMS data, making them accessible to a wider research community while maintaining compliance with ethical and legal requirements.
