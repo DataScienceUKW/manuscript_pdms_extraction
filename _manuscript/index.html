@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -86,14 +86,15 @@ div.csl-indent {
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8a894fcc3cb5e37eb5bf30def131be2f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 <meta name="citation_title" content="Extraction and Processing of Intensive Care Chart Data from a Patient Data Management System (PDMS)">
@@ -117,6 +118,7 @@ div.csl-indent {
 <meta name="citation_reference" content="citation_title=Does adherence to a quality indicator regarding early weaning from invasive ventilation improve economic outcome? A single-centre retrospective study;,citation_abstract=Objectives To measure and assess the economic impact of adherence to a single quality indicator (QI) regarding weaning from invasive ventilation.Design Retrospective observational single-centre study, based on electronic medical and administrative records.Setting Intensive care unit (ICU) of a German university hospital, reference centre for acute respiratory distress syndrome.Participants Records of 3063 consecutive mechanically ventilated patients admitted to the ICU between 2012 and 2017 were extracted, of whom 583 were eligible adults for further analysis. Patients’ weaning protocols were evaluated for daily adherence to quality standards until ICU discharge. Patients with &amp;amp;amp;lt;&amp;lt;65% compliance were assigned to the low adherence group (LAG), patients with ≥65% to the high adherence group (HAG).Primary and secondary outcome measures Economic healthcare costs, clinical outcomes and patients’ characteristics.Results The LAG consisted of 378 patients with a median negative economic results of −€3969, HAG of 205 (−€1030), respectively (p<<0.001). Median duration of ventilation was 476 (248; 769) hours in the LAG and 389 (247; 608) hours in the HAG (p<<0.001). Length of stay (LOS) in the LAG on ICU was 21 (12; 35) days and 16 (11; 25) days in the HAG (p<<0.001). LOS in the hospital was 36 (22; 61) days in the LAG, and within the HAG, respectively, 26 (18; 48) days (p=0.001).Conclusions High adherence to this single QI is associated with better clinical outcome and improved economic returns. Therefore, the results support the adherence to QI. However, the examined QI does not influence economic outcome as the decisive factor.;,citation_author=Alexander Zuber;,citation_author=Oliver Kumpf;,citation_author=Claudia Spies;,citation_author=Moritz Höft;,citation_author=Marc Deffland;,citation_author=Robert Ahlborn;,citation_author=Jochen Kruppa;,citation_author=Roland Jochem;,citation_author=Felix Balzer;,citation_publication_date=2022-01;,citation_cover_date=2022-01;,citation_year=2022;,citation_fulltext_html_url=https://bmjopen.bmj.com/lookup/doi/10.1136/bmjopen-2020-045327;,citation_issue=1;,citation_doi=10.1136/bmjopen-2020-045327;,citation_issn=2044-6055, 2044-6055;,citation_volume=12;,citation_journal_title=BMJ Open;">
 <meta name="citation_reference" content="citation_title=Information technology — database languages — SQL — part 1: Framework (SQL/framework);,citation_author=ISO/IEC;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_publisher=International Organization for Standardization;">
 <meta name="citation_reference" content="citation_title=SQLAlchemy, python SQL toolkit and object relational mapper;,citation_author=Michael Bayer;,citation_author=undefined contributors;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_publisher=https://www.sqlalchemy.org/;">
+<meta name="citation_reference" content="citation_title=Pdms_data_processing_pipeline;,citation_author=Nikolas B Schrader;,citation_publication_date=2025-11-14;,citation_cover_date=2025-11-14;,citation_year=2025;,citation_fulltext_html_url=https://github.com/DataScienceUKW/pdms_data_processing_pipeline;">
 </head>
 
 <body class="quarto-light">
@@ -262,7 +264,7 @@ div.csl-indent {
 Listing&nbsp;1: Straight-forward query design for demographic data retrieval
 </figcaption>
 <div aria-describedby="lst-data_extraction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @fallnr <span class="dt">NVARCHAR</span>(<span class="fu">MAX</span>) <span class="op">=</span> <span class="ch">:fallnr</span>; <span class="co">-- e.g. '123'</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
@@ -289,7 +291,7 @@ Listing&nbsp;1: Straight-forward query design for demographic data retrieval
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> patient.deleted <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> fall.FALLNR <span class="op">=</span> @fallnr</span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> fall.deleted <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> fall.FALLNR;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> fall.FALLNR;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
@@ -300,7 +302,7 @@ Listing&nbsp;1: Straight-forward query design for demographic data retrieval
 Listing&nbsp;2: Complex query design for relational data structures and content-aware filtering, e.g.&nbsp;in point-of-care diagnostic applications.
 </figcaption>
 <div aria-describedby="lst-extraxtion_BGA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @fallnr       <span class="dt">nvarchar</span>(<span class="dv">50</span>)  <span class="op">=</span> <span class="fu">CONVERT</span>(<span class="dt">nvarchar</span>(<span class="dv">50</span>), <span class="ch">:fallnr</span>);          <span class="co">-- e.g. '123'</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @from_ts      datetime2(<span class="dv">0</span>)  <span class="op">=</span> TRY_CONVERT(datetime2(<span class="dv">0</span>), <span class="ch">:start_date</span>);  <span class="co">-- optional</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @to_ts        datetime2(<span class="dv">0</span>)  <span class="op">=</span> TRY_CONVERT(datetime2(<span class="dv">0</span>), <span class="ch">:end_date</span>);    <span class="co">-- optional (exclusive)</span></span>
@@ -334,7 +336,51 @@ Listing&nbsp;2: Complex query design for relational data structures and content-
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> lab.FlagCurrent <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> labvar.LaborSystem <span class="op">&lt;&gt;</span> <span class="st">'SWISSLAB'</span></span>
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> (@from_ts <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> lab.DateTimeTo <span class="op">&gt;=</span> @from_ts)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> (@to_ts   <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> lab.DateTimeTo <span class="op">&lt;</span>  @to_ts);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> (@to_ts   <span class="kw">IS</span> <span class="kw">NULL</span> <span class="kw">OR</span> lab.DateTimeTo <span class="op">&lt;</span>  @to_ts);</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">-- Dynamic column list (exluding Bemerkung)</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @cols_bga <span class="dt">nvarchar</span>(<span class="fu">max</span>);</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> @cols_bga <span class="op">=</span> STRING_AGG(QUOTENAME(COPRAName), <span class="st">','</span>) WITHIN <span class="kw">GROUP</span> (<span class="kw">ORDER</span> <span class="kw">BY</span> COPRAName)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span> <span class="kw">DISTINCT</span> COPRAName <span class="kw">FROM</span> #base_bga <span class="kw">WHERE</span> COPRAName <span class="op">&lt;&gt;</span> <span class="st">'Bemerkung'</span>) d;</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="cf">IF</span> @cols_bga <span class="kw">IS</span> <span class="kw">NULL</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="cf">BEGIN</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="fu">CAST</span>(<span class="kw">NULL</span> <span class="kw">AS</span> <span class="dt">nvarchar</span>(<span class="dv">50</span>)) <span class="kw">AS</span> FALLNR,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>         <span class="fu">CAST</span>(<span class="kw">NULL</span> <span class="kw">AS</span> <span class="dt">nvarchar</span>(<span class="dv">50</span>)) <span class="kw">AS</span> SystemGroup,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>         <span class="fu">CAST</span>(<span class="kw">NULL</span> <span class="kw">AS</span> datetime2(<span class="dv">0</span>)) <span class="kw">AS</span> DateTimeTo,</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>         <span class="fu">CAST</span>(<span class="kw">NULL</span> <span class="kw">AS</span> <span class="dt">nvarchar</span>(<span class="dv">200</span>)) <span class="kw">AS</span> [<span class="kw">Type</span>];</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">RETURN</span>;</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="cf">END</span>;</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pivot</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @sql_bga <span class="dt">nvarchar</span>(<span class="fu">max</span>) <span class="op">=</span> N<span class="st">'</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT FALLNR, SystemGroup, DateTimeTo, [Type], '</span> <span class="op">+</span> @cols_bga <span class="op">+</span> N<span class="st">'</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="st">FROM (</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="st">  SELECT</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="st">      b.FALLNR,</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="st">      b.SystemGroup,</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="st">      b.DateTimeTo,</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="st">      (</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="st">        SELECT STRING_AGG(v.val, </span><span class="ch">''</span><span class="st">, </span><span class="ch">''</span><span class="st">)</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="st">        FROM (</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="st">          SELECT DISTINCT bx.val</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="st">          FROM #base_bga AS bx</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="st">          WHERE bx.SystemGroup = b.SystemGroup</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="st">            AND bx.DateTimeTo  = b.DateTimeTo</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="st">            AND bx.COPRAName   = </span><span class="ch">''</span><span class="st">Bemerkung</span><span class="ch">''</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="st">        ) AS v</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="st">      ) AS [Type],</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="st">      b.COPRAName,</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="st">      CONCAT(b.val, COALESCE(</span><span class="ch">''</span><span class="st"> </span><span class="ch">''</span><span class="st"> + b.Unit, </span><span class="ch">''''</span><span class="st">)) AS val</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM #base_bga AS b</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE b.COPRAName &lt;&gt; </span><span class="ch">''</span><span class="st">Bemerkung</span><span class="ch">''</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="st">) AS s</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="st">PIVOT (</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="st">  MAX(val) FOR COPRAName IN ('</span> <span class="op">+</span> @cols_bga <span class="op">+</span> N<span class="st">')</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="st">) AS p</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY FALLNR, DateTimeTo, SystemGroup, [Type];'</span>;</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="kw">EXEC</span> sys.sp_executesql @sql_bga;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
@@ -363,15 +409,18 @@ Listing&nbsp;2: Complex query design for relational data structures and content-
 <p>To make the extraction framework accessible beyond technically trained users, a lightweight front-end interface was implemented. The front-end interface incorporated fine-grained user-based access control and audit logging, fulfilling institutional governance requirements as well as the traceability and accountability obligations defined under DSGVO (Art. 5, 32) and §27 KHG.</p>
 <p>Predefined extraction templates for common research domains (e.g., epidemiology, vital parameters) provide standardized, validated data pipelines and minimize the risk of sensitive identifier (e.g., patient name, date of birth) retrieval. Extractions were tied to case numbers, enabling clinicians and researchers to obtain datasets relevant to specific trials or patient groups without requiring direct SQL interaction. De-identification of sensitive parameters was achieved by hashing.</p>
 <p>By abstracting low-level query complexity from end-user access, we reduced the risk of unintended database interference and promoted data integrity. In combination, the flexible back-end workflows and secure front-end interface created a scalable, reproducible, and governance-compliant process for secondary use of PDMS data.</p>
+<p>We implemented a scalable and modular pipeline for automated data extraction from the institutional patient data management system (PDMS, Copra). Although each data category still requires its own extraction and transformation logic, the framework provides standardized, reproducible, and legally compliant access to routine clinical data. In our institutional environment, the system currently supports multiple data domains including demographics, vital signs, and laboratory results—through predefined, configurable templates. Integrated auditing and de-identification components provide full traceability and pseudonymization in compliance with the General Data Protection Regulation (DSGVO) and §27 KHG.</p>
+<p>A simplified version of the extraction framework is publicly available on GitHub <span class="citation" data-cites="schrader_pdms_pipeline_2025">(<a href="#ref-schrader_pdms_pipeline_2025" role="doc-biblioref">12</a>)</span>, demonstrating the demographic-data workflow as an illustrative example. The full implementation in our hospital environment cannot be shared in its operational form, as extraction and transformation logic must be tailored to the institution-specific PDMS schema and is therefore neither directly portable nor readily interpretable outside our setting.</p>
 </section>
 </section>
 <section id="results-including-examples-of-use-and-limitations" class="level2">
 <h2 class="anchored" data-anchor-id="results-including-examples-of-use-and-limitations">Results (including examples of use and limitations)</h2>
-<p>We implemented a scalable and modular pipeline for automated data extraction from the institutional patient data management system (PDMS, Copra). Although each data category still required its own extraction and transformation logic, the framework provided standardized, reproducible, and legally compliant access to routine clinical data. The system currently supports multiple data domains—including demographics, vital signs, and laboratory results—through predefined, configurable templates. Integrated auditing and de-identification components provide full traceability and pseudonymization in compliance with the General Data Protection Regulation (DSGVO) and §27 KHG.</p>
-<p>In practical use, the pipeline substantially reduced manual query effort and improved reproducibility of analyses. A simple demonstration illustrates extraction of demographic data with automated auditing and pseudonymized export.</p>
+<p>To demonstrate the operational functionality of the implemented pipeline, we executed a demographic extraction for two cases using the predefined template. The extraction completed successfully and produced both a pseudonymized output table and a comprehensive audit record documenting all parameters, derived fields, and user actions.</p>
+<p>The audit log shows that the pipeline consistently applied the configured logic, including pseudonymization of identifiers, derivation of age from date of birth, and the recording of requested fields. The corresponding CSV output demonstrates that the system generates structured, analysis-ready datasets with standardized variable naming.</p>
+<p>In routine internal use, the pipeline has replaced ad hoc SQL-based retrieval for common data domains and has reproducibly generated identical outputs for repeated extractions with the same input parameters. These observations indicate stable system behavior and demonstrate that the implemented workflows enable reliable secondary use of PDMS data within our institutional environment.</p>
 <section id="example-usage-of-the-pipeline-for-demographic-data-extraction-audit-and-de-identification." class="level4">
 <h4 class="anchored" data-anchor-id="example-usage-of-the-pipeline-for-demographic-data-extraction-audit-and-de-identification.">Example usage of the pipeline for demographic data extraction, audit and de-identification.</h4>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.audit_logger <span class="im">import</span> AuditLogger</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.audit_logger <span class="im">import</span> AuditLogger</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.extraction_pipeline <span class="im">import</span> run_demographics</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>audit <span class="op">=</span> AuditLogger(</span>
@@ -394,10 +443,10 @@ Listing&nbsp;2: Complex query design for relational data structures and content-
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    actor<span class="op">=</span><span class="st">"n.schrader"</span>,                    <span class="co"># Identifier for the actor triggering extraction</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>audit.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>audit.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The corresponding audit log and output file document all parameters, derived fields, and pseudonymized identifiers, demonstrating transparent, auditable access to high-quality PDMS data suitable for secondary use in research and quality improvement projects.</p>
 <p><strong>logs/audit.jsonl</strong></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"ts"</span><span class="fu">:</span> <span class="st">"2025-11-12T10:39:57.193437+01:00"</span><span class="fu">,</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"actor"</span><span class="fu">:</span> <span class="st">"n.schrader"</span><span class="fu">,</span> </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"action"</span><span class="fu">:</span> <span class="st">"fetch"</span><span class="fu">,</span> </span>
@@ -413,7 +462,7 @@ Listing&nbsp;2: Complex query design for relational data structures and content-
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"out_format"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> </span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"rows"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> </span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"duration_ms"</span><span class="fu">:</span> <span class="fl">334.2735409969464</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>out/demographics.csv</strong></p>
 <pre class="csv"><code>case_number,patient_sex,patient_age_today
 a6e808094eb7,W,67
@@ -429,7 +478,7 @@ a6e808094eb7,W,67
 <section id="technical-and-methodological-considerations" class="level3">
 <h3 class="anchored" data-anchor-id="technical-and-methodological-considerations">Technical and Methodological Considerations</h3>
 <p>The extraction of routine clinical data from PDMS presents fundamental technical and methodological hurdles. While optimized for flexible clinical documentation and transactional performance, these systems inherently lack robust tools for analytical data extraction. The highly fragmented, denormalized, and proprietary data structures necessitate highly complex, advanced queries. As a result, extensive schema knowledge will be neccessary during the initial steps of data extraction. This SQL-based approach is highly effective for targeted retrieval of domains (e.g., demographics, ventilator parameters, laboratory results). However, direct SQL data extraction lacked a robust mechanism for role-based access control beyound user-specific database credentials, and logging user-specific extraction requests was necessary to comply with national regulations.</p>
-<p>Although de-identification of sensitive parameters via hashing in SQL was technically feasible, and query-based parameter minimization is obvious, practical implementation and configuration for each individual use case proved highly complex. Furthermore, the use of custom units, varied time formats, and system-specific coding schemes requires extensive data harmonization. Consequently, without dedicated ETL pipelines, these rich datasets remain inaccessible to the majority of clinical researchers. All these hurdles have been described before. <span class="citation" data-cites="lamer_development_2023">(<a href="#ref-lamer_development_2023" role="doc-biblioref">12</a>)</span></p>
+<p>Although de-identification of sensitive parameters via hashing in SQL was technically feasible, and query-based parameter minimization is obvious, practical implementation and configuration for each individual use case proved highly complex. Furthermore, the use of custom units, varied time formats, and system-specific coding schemes requires extensive data harmonization. Consequently, without dedicated ETL pipelines, these rich datasets remain inaccessible to the majority of clinical researchers. All these hurdles have been described before. <span class="citation" data-cites="lamer_development_2023">(<a href="#ref-lamer_development_2023" role="doc-biblioref">13</a>)</span></p>
 <p>Despite these challenges, structured ETL processes and a focus on standardization can successfully transform raw PDMS data into high-quality, analysis-ready datasets. Future work in the field should prioritize developing standardized export mechanisms (e.g., FHIR-based APIs), improving interoperability, and fostering collaborative data sharing infrastructures. In conclusion, routine data stored in PDMS contain unique opportunities for clinical and translational research, and the development of automation and decision-support systems. However secondary use requires overcoming substantial technical and methodological barriers. The approach presented here offers a reproducible methodology for extracting, transforming, harmonizing, and validating PDMS data, making them accessible to a wider research community while maintaining compliance with ethical and legal requirements.</p>
 </section>
 <section id="references" class="level3">
@@ -468,8 +517,11 @@ a6e808094eb7,W,67
 <div id="ref-sqlalchemy_software" class="csl-entry" role="listitem">
 <div class="csl-left-margin">11. </div><div class="csl-right-inline">Bayer M, contributors. SQLAlchemy, python SQL toolkit and object relational mapper. <a href="https://www.sqlalchemy.org/" class="uri">https://www.sqlalchemy.org/</a>; 2023. </div>
 </div>
+<div id="ref-schrader_pdms_pipeline_2025" class="csl-entry" role="listitem">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">Schrader NB. Pdms_data_processing_pipeline [Internet]. 2025. Available from: <a href="https://github.com/DataScienceUKW/pdms_data_processing_pipeline">https://github.com/DataScienceUKW/pdms_data_processing_pipeline</a></div>
+</div>
 <div id="ref-lamer_development_2023" class="csl-entry" role="listitem">
-<div class="csl-left-margin">12. </div><div class="csl-right-inline">Lamer A, Moussa MD, Marcilly R, Logier R, Vallet B, Tavernier B. Development and usage of an anesthesia data warehouse: Lessons learnt from a 10-year project. Journal of Clinical Monitoring and Computing [Internet]. 2023 Apr [cited 2025 Nov 11];37(2):461–72. Available from: <a href="https://link.springer.com/10.1007/s10877-022-00898-y">https://link.springer.com/10.1007/s10877-022-00898-y</a></div>
+<div class="csl-left-margin">13. </div><div class="csl-right-inline">Lamer A, Moussa MD, Marcilly R, Logier R, Vallet B, Tavernier B. Development and usage of an anesthesia data warehouse: Lessons learnt from a 10-year project. Journal of Clinical Monitoring and Computing [Internet]. 2023 Apr [cited 2025 Nov 11];37(2):461–72. Available from: <a href="https://link.springer.com/10.1007/s10877-022-00898-y">https://link.springer.com/10.1007/s10877-022-00898-y</a></div>
 </div>
 </div>
 </section>
@@ -528,13 +580,14 @@ a6e808094eb7,W,67
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
