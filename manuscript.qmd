@@ -233,7 +233,7 @@ The audit log shows that the pipeline consistently applied the configured logic,
 In routine internal use, the pipeline has replaced ad hoc SQL-based retrieval for common data domains and has reproducibly generated identical outputs for repeated extractions with the same input parameters. These observations indicate stable system behavior and demonstrate that the implemented workflows enable reliable secondary use of PDMS data within our institutional environment.
 
 #### Example usage of the pipeline for demographic data extraction, audit and de-identification.
-With the pipeline described above, we can now run an exemplary data extraction including de-identification and creation of an audit log file (@pipeline_usecase).
+With the pipeline described above, we can now run an exemplary data extraction including de-identification and creation of an audit log file (@lst-pipeline_usecase).
 
 :::{#lst-pipeline_usecase}
 ```python
@@ -265,7 +265,7 @@ audit.close()
 Application of the ETL pipeline to extract basic demographics, including audit logging and de-identification
 :::
 
-The corresponding audit log (@output_audit) and output file (@output_csv) document all parameters, derived fields, and pseudonymized identifiers, demonstrating transparent, auditable access to high-quality PDMS data suitable for secondary use in research and quality improvement projects.
+The corresponding audit log (@lst-output_audit) and output file (@lst-output_csv) document all parameters, derived fields, and pseudonymized identifiers, demonstrating transparent, auditable access to high-quality PDMS data suitable for secondary use in research and quality improvement projects.
 
 :::{#lst-output_audit}
 **logs/audit.jsonl**
