@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Nikolas B. Schrader1, Burkhard Meißner2, Paul Fischer1, Daniel Röder1, Maximilian Ertl2, and Benedikt Schmid1">
+<meta name="author" content="Nikolas B. Schrader1, Burkhard Meißner2, Paul Fischer1, Daniel Röder1, Maximilian Ertl2, Patrick Meybohm1, and Benedikt Schmid1">
 
 <title>Extraction and Processing of Intensive Care Chart Data from a Patient Data Management System (PDMS)</title>
 <style>
@@ -81,15 +81,14 @@ div.csl-indent {
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-8a894fcc3cb5e37eb5bf30def131be2f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 <meta name="citation_title" content="Extraction and Processing of Intensive Care Chart Data from a Patient Data Management System (PDMS)">
@@ -98,6 +97,7 @@ div.csl-indent {
 <meta name="citation_author" content="Paul Fischer">
 <meta name="citation_author" content="Daniel Röder">
 <meta name="citation_author" content="Maximilian Ertl">
+<meta name="citation_author" content="Patrick Meybohm">
 <meta name="citation_author" content="Benedikt Schmid">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Lifting Hospital Electronic Health Record Data Treasures: Challenges and Opportunities;,citation_abstract=Electronic health records (EHRs) have been successfully used in data science and machine learning projects. However, most of these data are collected for clinical use rather than for retrospective analysis. This means that researchers typically face many different issues when attempting to access and prepare the data for secondary use. We aimed to investigate how raw EHRs can be accessed and prepared in retrospective data science projects in a disciplined, effective, and efficient way. We report our experience and findings from a large-scale data science project analyzing routinely acquired retrospective data from the Kepler University Hospital in Linz, Austria. The project involved data collection from more than 150,000 patients over a period of 10 years. It included diverse data modalities, such as static demographic data, irregularly acquired laboratory test results, regularly sampled vital signs, and high-frequency physiological waveform signals. Raw medical data can be corrupted in many unexpected ways that demand thorough manual inspection and highly individualized data cleaning solutions. We present a general data preparation workflow, which was shaped in the course of our project and consists of the following 7 steps: obtain a rough overview of the available EHR data, define clinically meaningful labels for supervised learning, extract relevant data from the hospital’s data warehouses, match data extracted from different sources, deidentify them, detect errors and inconsistencies therein through a careful exploratory analysis, and implement a suitable data processing pipeline in actual code. Only few of the data preparation issues encountered in our project were addressed by generic medical data preprocessing tools that have been proposed recently. Instead, highly individualized solutions for the specific data used in one’s own research seem inevitable. We believe that the proposed workflow can serve as a guidance for practitioners, helping them to identify and address potential problems early and avoid some common pitfalls.;,citation_author=Alexander Maletzky;,citation_author=Carl Böck;,citation_author=Thomas Tschoellitsch;,citation_author=Theresa Roland;,citation_author=Helga Ludwig;,citation_author=Stefan Thumfart;,citation_author=Michael Giretzlehner;,citation_author=Sepp Hochreiter;,citation_author=Jens Meier;,citation_publication_date=2022-10;,citation_cover_date=2022-10;,citation_year=2022;,citation_issue=10;,citation_doi=10.2196/38557;,citation_issn=2291-9694;,citation_pmid=36269654;,citation_volume=10;,citation_journal_title=JMIR medical informatics;">
@@ -172,6 +172,14 @@ div.csl-indent {
                 <div class="quarto-title-meta-contents">
                     <p class="affiliation">
                         University Hospital Würzburg, Service Center Medical Informatics
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Patrick Meybohm </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        University Hospital Würzburg, Department of Anesthesiology, Intensive Care, Emergency and Pain Medicine
                       </p>
                   </div>
                       <div class="quarto-title-meta-contents">
@@ -272,7 +280,7 @@ div.csl-indent {
 Listing&nbsp;1: Straight-forward query design for demographic data retrieval
 </figcaption>
 <div aria-describedby="lst-data_extraction-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @fallnr <span class="dt">NVARCHAR</span>(<span class="fu">MAX</span>) <span class="op">=</span> <span class="ch">:fallnr</span>; <span class="co">-- e.g. '123'</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
@@ -299,7 +307,7 @@ Listing&nbsp;1: Straight-forward query design for demographic data retrieval
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> patient.deleted <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> fall.FALLNR <span class="op">=</span> @fallnr</span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">AND</span> fall.deleted <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> fall.FALLNR;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> fall.FALLNR;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </figure>
 </div>
@@ -310,7 +318,7 @@ Listing&nbsp;1: Straight-forward query design for demographic data retrieval
 Listing&nbsp;2: Complex query design for relational data structures and content-aware filtering, e.g.&nbsp;in point-of-care diagnostic applications.
 </figcaption>
 <div aria-describedby="lst-extraxtion_BGA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Params</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @fallnr       <span class="dt">nvarchar</span>(<span class="dv">50</span>)  <span class="op">=</span> <span class="fu">CONVERT</span>(<span class="dt">nvarchar</span>(<span class="dv">50</span>), <span class="ch">:fallnr</span>);          <span class="co">-- e.g. '123'</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @from_ts      datetime2(<span class="dv">0</span>)  <span class="op">=</span> TRY_CONVERT(datetime2(<span class="dv">0</span>), <span class="ch">:start_date</span>);  <span class="co">-- optional</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">DECLARE</span> @to_ts        datetime2(<span class="dv">0</span>)  <span class="op">=</span> TRY_CONVERT(datetime2(<span class="dv">0</span>), <span class="ch">:end_date</span>);    <span class="co">-- optional (exclusive)</span></span>
@@ -388,7 +396,7 @@ Listing&nbsp;2: Complex query design for relational data structures and content-
 <span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="st">) AS p</span></span>
 <span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY FALLNR, DateTimeTo, SystemGroup, [Type];'</span>;</span>
 <span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="kw">EXEC</span> sys.sp_executesql @sql_bga;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="kw">EXEC</span> sys.sp_executesql @sql_bga;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </figure>
 </div>
@@ -435,7 +443,7 @@ Listing&nbsp;2: Complex query design for relational data structures and content-
 Listing&nbsp;3: Application of the ETL pipeline to extract basic demographics, including audit logging and de-identification
 </figcaption>
 <div aria-describedby="lst-pipeline_usecase-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.audit_logger <span class="im">import</span> AuditLogger</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.audit_logger <span class="im">import</span> AuditLogger</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline.extraction_pipeline <span class="im">import</span> run_demographics</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>audit <span class="op">=</span> AuditLogger(</span>
@@ -458,7 +466,7 @@ Listing&nbsp;3: Application of the ETL pipeline to extract basic demographics, i
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    actor<span class="op">=</span><span class="st">"n.schrader"</span>,                    <span class="co"># Identifier for the actor triggering extraction</span></span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>audit.close()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>audit.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </figure>
 </div>
@@ -470,7 +478,7 @@ Listing&nbsp;4: Output of the created audit log in JSON format
 </figcaption>
 <div aria-describedby="lst-output_audit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <p><strong>logs/audit.jsonl</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"ts"</span><span class="fu">:</span> <span class="st">"2025-11-12T10:39:57.193437+01:00"</span><span class="fu">,</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"actor"</span><span class="fu">:</span> <span class="st">"n.schrader"</span><span class="fu">,</span> </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"action"</span><span class="fu">:</span> <span class="st">"fetch"</span><span class="fu">,</span> </span>
@@ -486,7 +494,7 @@ Listing&nbsp;4: Output of the created audit log in JSON format
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"out_format"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> </span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"rows"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> </span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"duration_ms"</span><span class="fu">:</span> <span class="fl">334.2735409969464</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </figure>
 </div>
@@ -628,14 +636,13 @@ a6e808094eb7,W,67
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -18,6 +18,9 @@ author:
     - name: Maximilian Ertl
       affiliations:
         - ref: SMI
+    - name: Patrick Meybohm
+      affiliations:
+        - ref: anest
     - name: Benedikt Schmid
       affiliations:
         - ref: anest
@@ -34,11 +37,11 @@ format:
   html:
     toc: true
   pdf:
-    toc: true
-    number-sections: true
+    toc: false
+    number-sections: false
     colorlinks: true
   docx:
-    toc: true
+    toc: false
     number-sections: true
     highlight-style: github
 bibliography: references.bib
@@ -48,7 +51,7 @@ filters:
 ---
 ## Abstract
 
-**Background:** Routine clinical data captured in Patient Data Management Systems (PDMS) in intensive care and perioperative settings are an invaluable resource for clinical research. However, the proprietary, fragmented, and transaction-oriented architecture of systems such as Copra severely limits secondary data use and requires extensive Extract, Transform, and Load (ETL) processing.
+**Background:** Routine clinical data captured in Patient Data Management Systems (PDMS) in intensive care and perioperative settings are an invaluable resource for clinical research. However, the proprietary, fragmented, and transaction-oriented architecture of many systems severely limits secondary data use and requires extensive Extract, Transform, and Load (ETL) processing.
 
 **Methods:** We developed a modular, Python-based ETL framework that enables flexible, domain-specific extraction of high-frequency, multimodal PDMS data. The system provides reusable components for data retrieval, preprocessing, harmonization, and de-identification, allowing extraction methods to be adapted or extended without modifying the core architecture. Each clinical domain is represented through dedicated Pydantic models enforcing consistent output schemas, type constraints, and automated plausibility checks. SQLAlchemy abstracts database access, while structured preprocessing logic resolves common documentation inconsistencies and transforms heterogeneous PDMS entries into standardized representations.
 
@@ -109,7 +112,7 @@ WHERE fall.FALLNR = @fallnr
   AND fall.deleted = 0
 ORDER BY fall.FALLNR;
 ```
-Straight-forward query design for demographic data retrieval
+Straight-forward query design for demographic data retrieval (SQL)
 :::
 
 Other, more relational data structures required a more complex extraction algorithm to ensure accurate outputs. Here, we describe the extraction of point-of-care blood gas analysis results (@lst-extraxtion_BGA).
@@ -197,7 +200,7 @@ ORDER BY FALLNR, DateTimeTo, SystemGroup, [Type];';
 
 EXEC sys.sp_executesql @sql_bga;
 ```
-Complex query design for relational data structures and content-aware filtering, e.g. in point-of-care diagnostic applications.
+Complex query design for relational data structures and content-aware filtering, e.g. in point-of-care diagnostic applications (SQL).
 :::
 
 As research demands expanded, a dedicated Python-based extraction framework was developed, using SQLAlchemy as an abstraction layer [@sqlalchemy_software]. This framework enabled reusable workflows across data domains (vital signs, therapies, medications), automated preprocessing steps such as time stamp conversion (UTC to CET/CEST), and implemented clinically necessary logic to address inconsistencies in documentation.
@@ -282,7 +285,7 @@ df = run_demographics(
 
 audit.close()
 ```
-Application of the ETL pipeline to extract basic demographics, including audit logging and de-identification
+Application of the ETL pipeline to extract basic demographics, including audit logging and de-identification (Python)
 :::
 
 The corresponding audit log (@lst-output_audit) and output file (@lst-output_csv) document all parameters, derived fields, and pseudonymized identifiers, demonstrating transparent, auditable access to high-quality PDMS data suitable for secondary use in research and quality improvement projects.
